@@ -69,6 +69,11 @@ namespace RestSharp
             this.Startup(new RestClientAutologConfiguration());
         }
 
+        public RestClientAutolog()
+        {
+            this.Startup(new RestClientAutologConfiguration());
+        }
+
         private void Startup(RestClientAutologConfiguration configuration)
         {
             if (configuration == null)

@@ -17,10 +17,16 @@ dotnet_csproj:
   informational_version: '%version%'
 
 before_build:
+  - choco install opencover.portable
+  - choco install codecov
   - dotnet restore
 
 build:
   project: RestSharp.Serilog.Auto.sln
+
+test_script:
+  - OpenCover.Console.exe -oldstyle -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj" -filter:"+[RestSharp.Serilog.Auto*]* -[RestSharp.Serilog.Auto.Tests*]* -[RestSharp.Serilog.Auto.ConsoleTest*]*" -output:".\coverage.xml"
+  - codecov -f .\coverage.xml -t %CODECOV_TOKEN%
 
 after_test:
   - dotnet pack --configuration Release /p:Version=%version%
