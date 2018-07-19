@@ -5,10 +5,10 @@ namespace RestSharp
     public class RestClientAutologConfiguration
     {
         internal const string DefaultMessageTemplateForError =
-            "[{Host}] HTTP {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds} ms";
+            "[{Application}] HTTP {Method} {Uri} responded {StatusCode} in {ElapsedMilliseconds} ms";
 
         internal const string DefaultMessageTemplateForSuccess =
-            "[{Host}] HTTP {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds} ms";
+            "[{Application}] HTTP {Method} {Uri} responded {StatusCode} in {ElapsedMilliseconds} ms";
 
         private string _messageTemplateForError;
         public string MessageTemplateForError
