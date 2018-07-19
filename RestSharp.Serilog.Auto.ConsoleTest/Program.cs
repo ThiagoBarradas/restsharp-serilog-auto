@@ -4,7 +4,7 @@ using System;
 
 namespace RestSharp.Serilog.Auto.ConsoleTest
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -21,10 +21,10 @@ namespace RestSharp.Serilog.Auto.ConsoleTest
 
             Log.Logger = loggerConfiguration.CreateLogger();
 
-            var configuration = new RestClientAutologConfiguration()
-            {
-                LoggerConfiguration = loggerConfiguration
-            };
+            //RestClientAutologConfiguration restClientAutologConfiguration = new RestClientAutologConfiguration()
+            //{
+            //    LoggerConfiguration = loggerConfiguration
+            //};
 
             IRestClient client = new RestClientAutolog("http://pruu.herokuapp.com");
             client.AddDefaultHeader("DefaultHeaderTest", "SomeValue");

@@ -1,8 +1,8 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5bb3ad40445a4d5e9aad8469de06e808)](https://app.codacy.com/app/ThiagoBarradas/packutils?utm_source=github.com&utm_medium=referral&utm_content=ThiagoBarradas/packutils&utm_campaign=badger)
-[![Build status](https://ci.appveyor.com/api/projects/status/e50c386k68c9dy7j/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/packutils/branch/master)
-[![codecov](https://codecov.io/gh/ThiagoBarradas/packutils/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/packutils)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/PackUtils.svg)](https://www.nuget.org/packages/PackUtils/)
-[![NuGet Version](https://img.shields.io/nuget/v/PackUtils.svg)](https://www.nuget.org/packages/PackUtils/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/080b586bd9084d5884e66d6773bc7b26)](https://www.codacy.com/app/ThiagoBarradas/restsharp-serilog-auto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThiagoBarradas/restsharp-serilog-auto&amp;utm_campaign=Badge_Grade)
+[![Build status](https://ci.appveyor.com/api/projects/status/p6x1nmjhlw6jcxye/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/restsharp-serilog-auto/branch/master)
+[![codecov](https://codecov.io/gh/ThiagoBarradas/restsharp-serilog-auto/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/restsharp-serilog-auto)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/RestSharp.Serilog.Auto.svg)](https://www.nuget.org/packages/RestSharp.Serilog.Auto/)
+[![NuGet Version](https://img.shields.io/nuget/v/RestSharp.Serilog.Auto.svg)](https://www.nuget.org/packages/RestSharp.Serilog.Auto/)
 
 # RestSharp.Serilog.Auto
 
