@@ -26,6 +26,27 @@ namespace RestSharp
             this.Startup(configuration);
         }
 
+        public RestClientAutolog(LoggerConfiguration configuration = null)
+        {
+            this.Startup(configuration);
+        }
+
+        public RestClientAutolog(LoggerConfiguration configuration, Uri baseUrl) : base(baseUrl)
+        {
+            this.Startup(configuration);
+        }
+
+        public RestClientAutolog(LoggerConfiguration configuration, string baseUrl) : base(baseUrl)
+        {
+            this.Startup(configuration);
+        }
+
+        private void Startup(LoggerConfiguration configuration)
+        {
+            this.Configuration = new RestClientAutologConfiguration();
+            this.Configuration.LoggerConfiguration = configuration;
+        }
+
         private void Startup(RestClientAutologConfiguration configuration)
         {
             if (configuration == null)
@@ -34,7 +55,6 @@ namespace RestSharp
             }
 
             this.Configuration = configuration;
-            Log.Logger = configuration.LoggerConfiguration.CreateLogger();
         }
 
         public override IRestResponse Execute(IRestRequest request)
@@ -63,6 +83,8 @@ namespace RestSharp
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
+            Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
+
             var uri = this.BuildUri(response.Request);
             LogContext.PushProperty("Agent", "RestSharp");
             LogContext.PushProperty("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
