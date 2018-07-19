@@ -44,7 +44,7 @@ IRestClient client = new RestClientAutolog("http://www.github.com", restClientAu
 
 Serilog uses `Log.Logger` as global. If you setup this on your application Startup/Bootstrap, it's not needed change logger configuration.
 
-## Variables to use in messages templates
+## Variables to use in message templates
 
 Properties created like `(...).Enrich.WithProperty("Application", "MyProject")` can be used in templates.
 
