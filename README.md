@@ -8,7 +8,7 @@
 
 Do you need log all communication made with RestSharp using your serilog configuration? Just install this package and register our client proxy for `IRestClient`.
 
-```
+```c#
 IRestClient client = new RestClientAutolog("http://www.github.com");
 ```
 
@@ -22,7 +22,7 @@ PM> Install-Package RestSharp.Serilog.Auto
 
 You can change error message, success message and logger configuration. 
 
-```
+```c#
 
 var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -35,19 +35,18 @@ var loggerConfiguration = new LoggerConfiguration()
 var restClientAutologConfiguration = new RestClientAutologConfiguration()
 {
     MessageTemplateForSuccess = "{Method} {Uri} responded {StatusCode}", 
-	MessageTemplateForError = "{Method} {Uri} is not good! {ErrorMessage}", 
-	LoggerConfiguration = loggerConfiguration
+    MessageTemplateForError = "{Method} {Uri} is not good! {ErrorMessage}", 
+    LoggerConfiguration = loggerConfiguration
 };
 
 IRestClient client = new RestClientAutolog("http://www.github.com", restClientAutologConfiguration);
-
 ```
 
 Serilog uses `Log.Logger` as global. If you setup this on your application Startup/Bootstrap, it's not needed change logger configuration.
 
 ## Variables to use in messages templates
 
-Properties created like `loggerConfiguration.Enrich.WithProperty("Application", "MyProject")` can be used in templates.
+Properties created like `(...).Enrich.WithProperty("Application", "MyProject")` can be used in templates.
 
 Default variables:
 
