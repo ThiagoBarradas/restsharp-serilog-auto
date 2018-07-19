@@ -6,7 +6,7 @@ namespace RestSharp.Serilog.Auto.Tests
 {
     public class RestClientAutologConfigurationTest
     {
-        public static string DefaultMessage = "[{Application}] HTTP {Method} {Uri} responded {StatusCode} in {ElapsedMilliseconds} ms";
+        public static readonly string DefaultMessage = "[{Application}] HTTP {Method} {Uri} responded {StatusCode} in {ElapsedMilliseconds} ms";
 
         [Fact]
         public void Should_Return_Default_Values()

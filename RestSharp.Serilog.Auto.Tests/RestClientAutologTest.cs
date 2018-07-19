@@ -147,6 +147,20 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
+        public void Should_Construct_With_BaseUrlAsString_And_RestClientAutologConfiguration_Null()
+        {
+            // arrange & act
+            RestClientAutologConfiguration configuration = null;
+            var client = new RestClientAutolog("http://www.github.com/", configuration);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("http://www.github.com/", client.BaseUrl.AbsoluteUri);
+        }
+
+        [Fact]
         public void Should_Construct_With_BaseUrlAsUri_And_RestClientAutologConfiguration()
         {
             // arrange & act
