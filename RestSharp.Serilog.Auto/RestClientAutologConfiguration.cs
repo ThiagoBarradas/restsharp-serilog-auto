@@ -40,26 +40,6 @@ namespace RestSharp
             }
         }
 
-        private LoggerConfiguration _loggerConfiguration;
-        public LoggerConfiguration LoggerConfiguration
-        {
-            get
-            {
-                return (this._loggerConfiguration != null)
-                    ? this._loggerConfiguration
-                    : new LoggerConfiguration()
-                            .MinimumLevel.Debug()
-                            .Enrich.FromLogContext()
-                            .Enrich.WithProperty("Application", "RestSharp.Autolog")
-                            .WriteTo.Console();
-            }
-            set
-            {
-                if (value != null)
-                {
-                    this._loggerConfiguration = value;
-                }
-            }
-        }
+        public LoggerConfiguration LoggerConfiguration { get; set; }
     }
 }

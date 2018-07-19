@@ -19,12 +19,14 @@ namespace RestSharp.Serilog.Auto.ConsoleTest
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console();
 
+            Log.Logger = loggerConfiguration.CreateLogger();
+
             var configuration = new RestClientAutologConfiguration()
             {
                 LoggerConfiguration = loggerConfiguration
             };
 
-            IRestClient client = new RestClientAutolog(configuration, "http://pruu.herokuapp.com");
+            IRestClient client = new RestClientAutolog("http://pruu.herokuapp.com");
             client.AddDefaultHeader("DefaultHeaderTest", "SomeValue");
 
             RestRequest request = new RestRequest("dump/{name}", Method.POST);

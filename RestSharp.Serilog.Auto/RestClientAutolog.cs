@@ -9,42 +9,64 @@ namespace RestSharp
 {
     public class RestClientAutolog : RestClient
     {
-        private RestClientAutologConfiguration Configuration { get; set; }
+        public RestClientAutologConfiguration Configuration { get; set; }
 
-        public RestClientAutolog(RestClientAutologConfiguration configuration = null)
+        public RestClientAutolog(RestClientAutologConfiguration configuration)
         {
             this.Startup(configuration);
         }
 
-        public RestClientAutolog(RestClientAutologConfiguration configuration, Uri baseUrl) : base(baseUrl)
+        public RestClientAutolog(Uri baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
         {
             this.Startup(configuration);
         }
 
-        public RestClientAutolog(RestClientAutologConfiguration configuration, string baseUrl) : base(baseUrl)
+        public RestClientAutolog(string baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
         {
             this.Startup(configuration);
         }
 
-        public RestClientAutolog(LoggerConfiguration configuration = null)
+        public RestClientAutolog(LoggerConfiguration loggerConfiguration)
         {
-            this.Startup(configuration);
+            this.Startup(new RestClientAutologConfiguration()
+            {
+                LoggerConfiguration = loggerConfiguration
+            });
         }
 
-        public RestClientAutolog(LoggerConfiguration configuration, Uri baseUrl) : base(baseUrl)
+        public RestClientAutolog(Uri baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
         {
-            this.Startup(configuration);
+            this.Startup(new RestClientAutologConfiguration()
+            {
+                LoggerConfiguration = loggerConfiguration
+            });
         }
 
-        public RestClientAutolog(LoggerConfiguration configuration, string baseUrl) : base(baseUrl)
+        public RestClientAutolog(string baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
         {
-            this.Startup(configuration);
+            this.Startup(new RestClientAutologConfiguration()
+            {
+                LoggerConfiguration = loggerConfiguration
+            });
         }
 
-        private void Startup(LoggerConfiguration configuration)
+        public RestClientAutolog(string baseUrl, string message) : base(baseUrl)
         {
-            this.Configuration = new RestClientAutologConfiguration();
-            this.Configuration.LoggerConfiguration = configuration;
+            this.Startup(new RestClientAutologConfiguration()
+            {
+                MessageTemplateForError = message,
+                MessageTemplateForSuccess = message
+            });
+        }
+
+        public RestClientAutolog(string baseUrl) : base(baseUrl)
+        {
+            this.Startup(new RestClientAutologConfiguration());
+        }
+
+        public RestClientAutolog(Uri baseUrl) : base(baseUrl)
+        {
+            this.Startup(new RestClientAutologConfiguration());
         }
 
         private void Startup(RestClientAutologConfiguration configuration)
@@ -83,7 +105,10 @@ namespace RestSharp
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
-            Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
+            if (this.Configuration.LoggerConfiguration != null)
+            {
+                Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
+            }
 
             var uri = this.BuildUri(response.Request);
             LogContext.PushProperty("Agent", "RestSharp");
