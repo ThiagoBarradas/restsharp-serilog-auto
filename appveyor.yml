@@ -16,6 +16,9 @@ dotnet_csproj:
   file_version: '%version%'
   informational_version: '%version%'
 
+before_build:
+  - dotnet restore
+
 build:
   project: RestSharp.Serilog.Auto.sln
 
