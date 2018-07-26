@@ -96,18 +96,6 @@ namespace RestSharp
             return response;
         }
 
-        public override IRestResponse<T> Execute<T>(IRestRequest request)
-        {
-            var stopwatch = Stopwatch.StartNew();
-
-            var response = base.Execute<T>(request);
-            stopwatch.Stop();
-
-            this.LogRequestAndResponse(response, stopwatch);
-
-            return response;
-        }
-
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
             if (this.Configuration.LoggerConfiguration != null)
