@@ -1,12 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Thiago Barradas</Authors>
     <Company>Thiago Barradas</Company>
     <Description>Automatic log communication (request and response) from RestSharp using Serilog.</Description>
     <PackageProjectUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</RepositoryUrl>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
