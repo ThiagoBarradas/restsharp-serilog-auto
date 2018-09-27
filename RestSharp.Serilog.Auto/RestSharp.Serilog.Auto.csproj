@@ -6,10 +6,13 @@
     <Company>Thiago Barradas</Company>
     <Description>Automatic log communication (request and response) from RestSharp using Serilog.</Description>
     <PackageProjectUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</RepositoryUrl>
-    <ApplicationIcon />
+    <Copyright>Ⓒ Thiago Barradas</Copyright>
+    <PackageIconUrl>https://i.imgur.com/GkciSHC.png</PackageIconUrl> 
     <OutputType>Library</OutputType>
     <StartupObject />
+    <PackageTags>restsharp, serilog, autolog, log, seq, splunk, console, sink, core, framework, standard</PackageTags>   
   </PropertyGroup>
 
   <ItemGroup>
