@@ -35,6 +35,27 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
+        public void Should_Construct_With_GlobalConfiguration()
+        {
+            // arrange & act
+            RestClientAutolog.GlobalConfiguration = new RestClientAutologConfiguration
+            {
+                MessageTemplateForError = "error",
+                MessageTemplateForSuccess = "success"
+            };
+            var client = new RestClientAutolog("http://www.google.com/");
+
+            // assert
+            Assert.Equal("error", client.Configuration.MessageTemplateForError);
+            Assert.Equal("success", client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("http://www.google.com/", client.BaseUrl.AbsoluteUri);
+
+            // clean up
+            RestClientAutolog.GlobalConfiguration = null;
+        }
+
+        [Fact]
         public void Should_Construct_With_BaseUrlAsUri()
         {
             // arrange & act

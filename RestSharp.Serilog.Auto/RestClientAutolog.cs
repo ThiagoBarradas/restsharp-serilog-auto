@@ -12,6 +12,8 @@ namespace RestSharp
 {
     public class RestClientAutolog : RestClient
     {
+        public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
+
         public RestClientAutologConfiguration Configuration { get; set; }
 
         public RestClientAutolog(RestClientAutologConfiguration configuration)
@@ -79,6 +81,8 @@ namespace RestSharp
 
         private void Startup(RestClientAutologConfiguration configuration)
         {
+            configuration = configuration ?? RestClientAutolog.GlobalConfiguration;
+
             if (configuration == null)
             {
                 configuration = new RestClientAutologConfiguration();
