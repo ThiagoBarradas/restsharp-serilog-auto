@@ -6,7 +6,7 @@ namespace RestSharp.Serilog.Auto.Tests
 {
     public class RestClientAutologTest
     {
-        public static readonly string DefaultMessage = "[{Application}] HTTP {Method} {Uri} responded {StatusCode} in {ElapsedMilliseconds} ms";
+        public static readonly string DefaultMessage = "[{Application}] HTTP {Method} {Url} responded {StatusCode} in {ElapsedMilliseconds} ms";
 
         [Fact]
         public void Should_Construct_With_Empty()
@@ -212,29 +212,138 @@ namespace RestSharp.Serilog.Auto.Tests
         public void Should_Execute_RestRequest_With_GenericType_And_Success()
         {
             // arrange
-            var client = new RestClientAutolog("http://md5.jsontest.com/");
+            var client = new RestClientAutolog("https://reqres.in/api/users/1");
             var restRequest = new RestRequest(Method.GET);
-            restRequest.AddQueryParameter("text", "Thiago Barradas");
+            restRequest.AddQueryParameter("somequery", "test1");
+            restRequest.AddQueryParameter("somequery", "test2");
+            restRequest.AddQueryParameter("somequery2", "test3");
+            restRequest.AddQueryParameter("RequestKey", "123456");
 
             // act
-            var restResponse = client.Execute<MD5>(restRequest);
+            var restResponse = client.Execute<User>(restRequest);
 
             // assert
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
             Assert.Null(client.Configuration.LoggerConfiguration);
-            Assert.Equal("http://md5.jsontest.com/", client.BaseUrl.AbsoluteUri);
-            Assert.Equal("Thiago Barradas", restResponse.Data.Original);
-            Assert.Equal("ad5879ef35a1e0156d8cb4809df3d69d", restResponse.Data.Md5);
+            Assert.Equal("reqres.in", client.BaseUrl.Host);
+            Assert.Equal(1, restResponse.Data.Data.id);
+            Assert.Equal("George", restResponse.Data.Data.first_name);
             Assert.Equal(200, (int)restResponse.StatusCode);
             Assert.True(restResponse.IsSuccessful);
         }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_POST_And_GenericType_And_Success()
+        {
+            // arrange
+            var client = new RestClientAutolog("https://reqres.in/api/users");
+            client.Configuration.JsonBlacklist = new string[] { "*job" };
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("X-Forwarded-For", "127.0.0.1");
+            restRequest.AddJsonBody(new
+            { 
+                name = "Someone",
+                job = "Engineer"
+            });
+
+            // act
+            var restResponse = client.Execute<UserData>(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("reqres.in", client.BaseUrl.Host);
+            Assert.Equal("Engineer", restResponse.Data.job);
+            Assert.Equal("Someone", restResponse.Data.name);
+            Assert.Equal(201, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_X_Www_Form_Url_Encoded()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddParameter("", "someproperty=somevalue&someproperty=somevalue2&xpto&xpto=&", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_Empty_X_Www_Form_Url_Encoded()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddParameter("", "", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_InvalidJson()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddParameter("", "{invalid}", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
     }
 
-    public class MD5
+    public class User
     {
-        public string Md5 { get; set; }
+        public UserData Data { get; set; }
+    }
 
-        public string Original { get; set; }
+    public class UserData
+    {
+        public int id { get; set; }
+
+        public string first_name { get; set; }
+
+        public string last_name { get; set; }
+
+        public string name { get; set; }
+
+        public string job { get; set; }
     }
 }

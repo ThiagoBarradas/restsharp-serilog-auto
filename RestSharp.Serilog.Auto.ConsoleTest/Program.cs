@@ -14,8 +14,8 @@ namespace RestSharp.Serilog.Auto.ConsoleTest
                 .MinimumLevel.Override("System", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
-                .Enrich.WithProperty("Domain", "MyTeam")
-                .Enrich.WithProperty("Application", "MyProject")
+                .Enrich.WithProperty("Domain", "MyTeamRS")
+                .Enrich.WithProperty("Application", "MyProjectRS")
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console();
 
@@ -26,17 +26,29 @@ namespace RestSharp.Serilog.Auto.ConsoleTest
             //    LoggerConfiguration = loggerConfiguration
             //};
 
-            IRestClient client = new RestClientAutolog("http://pruu.herokuapp.com");
+            RestClientAutolog client = new RestClientAutolog("http://pruu.herokuapp.com");
             client.AddDefaultHeader("DefaultHeaderTest", "SomeValue");
+
+            client.Configuration.JsonBlacklist = new string[] { "*password" };
 
             RestRequest request = new RestRequest("dump/{name}", Method.POST);
             request.AddHeader("RequestCustomHeader", "SomeValue2");
+            request.AddHeader("RequestCustomHeader", "SomeValue3");
+            request.AddHeader("RequestKey", "keykeykey");
             request.AddUrlSegment("name", "RestsharpAutoLog");
             request.AddQueryParameter("CustomQuery", "SomeValue3");
+            request.AddQueryParameter("CustomQuery", "SomeValue2");
+            request.AddQueryParameter("CustomQuery1", "SomeValue1");
+            request.AddQueryParameter("CustomQuery2", "");
+            request.AddQueryParameter("CustomQuery3", null);
             request.AddJsonBody(new
             {
                 TestOne = 123,
-                TestTwo = "SomeValueBody"
+                TestTwo = "SomeValueBody",
+                Password = "12321312",
+                Test = new {
+                    Password = 123
+                }
             });
 
             var response = client.Execute(request);
