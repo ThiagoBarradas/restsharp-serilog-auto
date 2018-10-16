@@ -45,13 +45,15 @@ namespace RestSharp.Serilog.Auto.Tests
             };
             var client = new RestClientAutolog("http://www.google.com/");
 
+            RestClientAutolog.GlobalConfiguration.MessageTemplateForError = "new_error";
+
             // assert
             Assert.Equal("error", client.Configuration.MessageTemplateForError);
             Assert.Equal("success", client.Configuration.MessageTemplateForSuccess);
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("http://www.google.com/", client.BaseUrl.AbsoluteUri);
 
-            // clean up
+            // cleanup
             RestClientAutolog.GlobalConfiguration = null;
         }
 

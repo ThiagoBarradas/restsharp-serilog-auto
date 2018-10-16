@@ -66,26 +66,26 @@ namespace RestSharp
 
         public RestClientAutolog(string baseUrl) : base(baseUrl)
         {
-            this.Startup(new RestClientAutologConfiguration());
+            this.Startup(null);
         }
 
         public RestClientAutolog(Uri baseUrl) : base(baseUrl)
         {
-            this.Startup(new RestClientAutologConfiguration());
+            this.Startup(null);
         }
 
         public RestClientAutolog()
         {
-            this.Startup(new RestClientAutologConfiguration());
+            this.Startup(null);
         }
 
         private void Startup(RestClientAutologConfiguration configuration)
         {
-            configuration = configuration ?? RestClientAutolog.GlobalConfiguration;
-
             if (configuration == null)
-            {
-                configuration = new RestClientAutologConfiguration();
+            { 
+                configuration = (GlobalConfiguration != null)
+                    ? GlobalConfiguration.Clone()
+                    : new RestClientAutologConfiguration();
             }
 
             this.Configuration = configuration;
