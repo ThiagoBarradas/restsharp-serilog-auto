@@ -291,6 +291,7 @@ namespace RestSharp.Serilog.Auto.Tests
             var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
             var restRequest = new RestRequest(Method.POST);
             restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddHeader("LogIgnored", "ResponseBody,ResponseContent");
             restRequest.AddParameter("", "someproperty=somevalue&someproperty=somevalue2&xpto&xpto=&", ParameterType.RequestBody);
 
             // act

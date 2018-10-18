@@ -111,30 +111,41 @@ namespace RestSharp
             }
 
             var uri = this.BuildUri(response.Request);
-            LogContext.PushProperty("Agent", "RestSharp");
-            LogContext.PushProperty("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
-            LogContext.PushProperty("Method", response.Request.Method.ToString());
-            LogContext.PushProperty("Url", uri.AbsoluteUri);
-            LogContext.PushProperty("Host", uri.Host);
-            LogContext.PushProperty("Path", uri.AbsolutePath);
-            LogContext.PushProperty("Port", uri.Port);
-            LogContext.PushProperty("RequestKey", this.GetRequestKey(response.Request));
-            LogContext.PushProperty("QueryString", uri.Query);
-            LogContext.PushProperty("Query", this.GetRequestQueryStringAsObject(response.Request));
-            LogContext.PushProperty("RequestBody", this.GetRequestBody(response.Request));
-            LogContext.PushProperty("RequestHeaders", this.GetRequestHeaders(response.Request));
-            LogContext.PushProperty("StatusCode", (int)response.StatusCode);
-            LogContext.PushProperty("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
-            LogContext.PushProperty("StatusDescription", response.StatusDescription?.Replace(" ",""));
-            LogContext.PushProperty("ResponseStatus", response.ResponseStatus.ToString());
-            LogContext.PushProperty("ProtocolVersion", response.ProtocolVersion);
-            LogContext.PushProperty("IsSuccessful", response.IsSuccessful);
-            LogContext.PushProperty("ErrorMessage", response.ErrorMessage);
-            LogContext.PushProperty("ErrorException", response.ErrorException);
-            LogContext.PushProperty("ResponseContent", this.GetResponseContent(response));
-            LogContext.PushProperty("ContentLength", response.ContentLength);
-            LogContext.PushProperty("ContentType", response.ContentType);
-            LogContext.PushProperty("ResponseHeaders", this.GetResponseHeaders(response));
+            string[] ignoredProperties = this.GetIgnoredProperties(response.Request);
+            var properties = new Dictionary<string, object>();
+
+            properties.Add("Agent", "RestSharp");
+            properties.Add("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
+            properties.Add("Method", response.Request.Method.ToString());
+            properties.Add("Url", uri.AbsoluteUri);
+            properties.Add("Host", uri.Host);
+            properties.Add("Path", uri.AbsolutePath);
+            properties.Add("Port", uri.Port);
+            properties.Add("RequestKey", this.GetRequestKey(response.Request));
+            properties.Add("QueryString", uri.Query);
+            properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request));
+            properties.Add("RequestBody", this.GetRequestBody(response.Request));
+            properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request));
+            properties.Add("StatusCode", (int)response.StatusCode);
+            properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
+            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
+            properties.Add("ResponseStatus", response.ResponseStatus.ToString());
+            properties.Add("ProtocolVersion", response.ProtocolVersion);
+            properties.Add("IsSuccessful", response.IsSuccessful);
+            properties.Add("ErrorMessage", response.ErrorMessage);
+            properties.Add("ErrorException", response.ErrorException);
+            properties.Add("ResponseContent", this.GetResponseContent(response));
+            properties.Add("ContentLength", response.ContentLength);
+            properties.Add("ContentType", response.ContentType);
+            properties.Add("ResponseHeaders", this.GetResponseHeaders(response));
+
+            foreach(var property in properties)
+            {
+                if (ignoredProperties.Contains(property.Key) == false)
+                {
+                    LogContext.PushProperty(property.Key, property.Value);
+                }
+            }
 
             if (response.IsSuccessful)
             {
@@ -144,6 +155,20 @@ namespace RestSharp
             {
                 Log.Error(this.Configuration.MessageTemplateForSuccess);
             }
+        }
+
+        private string[] GetIgnoredProperties(IRestRequest request)
+        {
+            var ignoredProperties = request.Parameters.Where(p => 
+                p.Type == ParameterType.HttpHeader && p.Name == "LogIgnored")
+                .FirstOrDefault();
+
+            if (ignoredProperties?.Value == null)
+            {
+                return new string[] { };
+            }
+
+            return ignoredProperties.Value.ToString().Split(',');
         }
 
         private object GetRequestKey(IRestRequest request)
