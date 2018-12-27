@@ -12,7 +12,7 @@ namespace RestSharp.Serilog.Auto.Tests
         public void Should_Construct_With_Empty_Using_Factory()
         {
             // arrange & act
-            var restClientAutologFactory = new RestClientAutologFactory();
+            var restClientAutologFactory = new RestClientFactory();
             var client = (RestClientAutolog) restClientAutologFactory.GetInstance();
 
             // assert
@@ -26,7 +26,7 @@ namespace RestSharp.Serilog.Auto.Tests
         public void Should_Construct_With_BaseUrlAsString_Using_Factory()
         {
             // arrange & act
-            var restClientAutologFactory = new RestClientAutologFactory();
+            var restClientAutologFactory = new RestClientFactory();
             RestClientAutolog client = (RestClientAutolog) restClientAutologFactory.GetInstance("http://www.google.com/");
 
             // assert
@@ -63,7 +63,7 @@ namespace RestSharp.Serilog.Auto.Tests
         public void Should_Construct_With_BaseUrlAsUri_Using_Factory()
         {
             // arrange & act
-            var restClientAutologFactory = new RestClientAutologFactory();
+            var restClientAutologFactory = new RestClientFactory();
             var client = (RestClientAutolog) restClientAutologFactory.GetInstance(new Uri("http://www.google.com/"));
 
             // assert
@@ -145,7 +145,7 @@ namespace RestSharp.Serilog.Auto.Tests
                 LoggerConfiguration = null
             };
 
-            var restClientAutologFactory = new RestClientAutologFactory();
+            var restClientAutologFactory = new RestClientFactory();
             var client = (RestClientAutolog)restClientAutologFactory.GetInstance(configuration);
 
             // assert

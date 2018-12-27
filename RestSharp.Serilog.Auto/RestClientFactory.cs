@@ -2,7 +2,7 @@
 
 namespace RestSharp.Serilog.Auto
 {
-    public interface IRestClientAutologFactory
+    public interface IRestClientFactory
     {
         IRestClient GetInstance(Uri uri);
 
@@ -13,7 +13,7 @@ namespace RestSharp.Serilog.Auto
         IRestClient GetInstance();
     }
 
-    public class RestClientAutologFactory : IRestClientAutologFactory
+    public class RestClientFactory : IRestClientFactory
     {
         public IRestClient GetInstance(Uri uri)
         {
