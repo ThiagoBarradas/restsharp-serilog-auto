@@ -9,10 +9,11 @@ namespace RestSharp.Serilog.Auto.Tests
         public static readonly string DefaultMessage = "[{Application}] HTTP {Method} {Url} responded {StatusCode} in {ElapsedMilliseconds} ms";
 
         [Fact]
-        public void Should_Construct_With_Empty()
+        public void Should_Construct_With_Empty_Using_Factory()
         {
             // arrange & act
-            var client = new RestClientAutolog();
+            var restClientAutologFactory = new RestClientAutologFactory();
+            var client = (RestClientAutolog) restClientAutologFactory.GetInstance();
 
             // assert
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
@@ -22,10 +23,11 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
-        public void Should_Construct_With_BaseUrlAsString()
+        public void Should_Construct_With_BaseUrlAsString_Using_Factory()
         {
             // arrange & act
-            var client = new RestClientAutolog("http://www.google.com/");
+            var restClientAutologFactory = new RestClientAutologFactory();
+            RestClientAutolog client = (RestClientAutolog) restClientAutologFactory.GetInstance("http://www.google.com/");
 
             // assert
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
@@ -58,10 +60,11 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
-        public void Should_Construct_With_BaseUrlAsUri()
+        public void Should_Construct_With_BaseUrlAsUri_Using_Factory()
         {
             // arrange & act
-            var client = new RestClientAutolog(new Uri("http://www.google.com/"));
+            var restClientAutologFactory = new RestClientAutologFactory();
+            var client = (RestClientAutolog) restClientAutologFactory.GetInstance(new Uri("http://www.google.com/"));
 
             // assert
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
@@ -132,7 +135,7 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
-        public void Should_Construct_With_RestClientAutologConfiguration()
+        public void Should_Construct_With_RestClientAutologConfiguration_Using_Factory()
         {
             // arrange & act
             var configuration = new RestClientAutologConfiguration()
@@ -141,7 +144,9 @@ namespace RestSharp.Serilog.Auto.Tests
                 MessageTemplateForSuccess = "",
                 LoggerConfiguration = null
             };
-            var client = new RestClientAutolog(configuration);
+
+            var restClientAutologFactory = new RestClientAutologFactory();
+            var client = (RestClientAutolog)restClientAutologFactory.GetInstance(configuration);
 
             // assert
             Assert.Equal("Error", client.Configuration.MessageTemplateForError);
