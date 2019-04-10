@@ -122,6 +122,7 @@ namespace RestSharp
             properties.Add("Path", uri.AbsolutePath);
             properties.Add("Port", uri.Port);
             properties.Add("RequestKey", this.GetRequestKey(response.Request));
+            properties.Add("AccountId", this.GetAccountId(response.Request));
             properties.Add("QueryString", uri.Query);
             properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request));
             properties.Add("RequestBody", this.GetRequestBody(response.Request));
@@ -175,6 +176,12 @@ namespace RestSharp
         {
             var requestKey = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "RequestKey").FirstOrDefault();
             return requestKey?.Value;
+        }
+
+        private object GetAccountId(IRestRequest request)
+        {
+            var accountId = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "AccountId").FirstOrDefault();
+            return accountId?.Value;
         }
 
         private object GetRequestQueryStringAsObject(IRestRequest request)

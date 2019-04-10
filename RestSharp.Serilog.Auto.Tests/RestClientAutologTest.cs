@@ -246,6 +246,7 @@ namespace RestSharp.Serilog.Auto.Tests
             restRequest.AddQueryParameter("somequery", "test2");
             restRequest.AddQueryParameter("somequery2", "test3");
             restRequest.AddQueryParameter("RequestKey", "123456");
+            restRequest.AddQueryParameter("AccountId", "acc_id");
 
             // act
             var restResponse = client.Execute<User>(restRequest);
