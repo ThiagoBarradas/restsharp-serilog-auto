@@ -17,22 +17,22 @@ namespace RestSharp.Serilog.Auto
     {
         public IRestClient GetInstance(Uri uri)
         {
-            return new RestClientAutolog(uri);
+            return new RestClientAutolog(uri).WithRequestKey();
         }
 
         public IRestClient GetInstance(string uri)
         {
-            return new RestClientAutolog(uri);
+            return new RestClientAutolog(uri).WithRequestKey();
         }
 
         public IRestClient GetInstance(RestClientAutologConfiguration configuration)
         {
-            return new RestClientAutolog(configuration);
+            return new RestClientAutolog(configuration).WithRequestKey();
         }
 
         public IRestClient GetInstance()
         {
-            return new RestClientAutolog();
+            return new RestClientAutolog().WithRequestKey();
         }
     }
 }
