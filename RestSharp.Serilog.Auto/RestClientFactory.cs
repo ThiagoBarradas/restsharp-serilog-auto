@@ -4,6 +4,10 @@ namespace RestSharp.Serilog.Auto
 {
     public interface IRestClientFactory
     {
+        string RequestKey { get; set; }
+
+        string AccountId { get; set; }
+
         IRestClient GetInstance(Uri uri);
 
         IRestClient GetInstance(string uri);
