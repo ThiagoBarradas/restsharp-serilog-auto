@@ -15,24 +15,32 @@ namespace RestSharp.Serilog.Auto
 
     public class RestClientFactory : IRestClientFactory
     {
+        public string RequestKey { get; set; }
+
+        public string AccountId { get; set; }
+
         public IRestClient GetInstance(Uri uri)
         {
-            return new RestClientAutolog(uri).WithHeaders();
+            return new RestClientAutolog(uri)
+                .WithHeaders(this.RequestKey, this.AccountId);
         }
 
         public IRestClient GetInstance(string uri)
         {
-            return new RestClientAutolog(uri).WithHeaders();
+            return new RestClientAutolog(uri)
+                .WithHeaders(this.RequestKey, this.AccountId);
         }
 
         public IRestClient GetInstance(RestClientAutologConfiguration configuration)
         {
-            return new RestClientAutolog(configuration).WithHeaders();
+            return new RestClientAutolog(configuration)
+                .WithHeaders(this.RequestKey, this.AccountId);
         }
 
         public IRestClient GetInstance()
         {
-            return new RestClientAutolog().WithHeaders();
+            return new RestClientAutolog()
+                .WithHeaders(this.RequestKey, this.AccountId);
         }
     }
 }

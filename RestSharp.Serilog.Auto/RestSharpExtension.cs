@@ -4,39 +4,40 @@
     {
         public static string RequestKeyProperty { get; set; } = "RequestKey";
 
-        public static string RequestKeyValue { get; set; }
-
         public static string AccountIdProperty { get; set; } = "AccountId";
 
-        public static string AccountIdValue { get; set; }
-
-        public static IRestClient WithRequestKey(this IRestClient client)
+        public static IRestClient WithRequestKey(this IRestClient client, string requestKey)
         {
-            client.AddDefaultHeader(RequestKeyProperty, RequestKeyValue ?? "undefined");
+            client.AddDefaultHeader(RequestKeyProperty, requestKey ?? "undefined");
             return client;
         }
 
-        public static IRestRequest WithRequestKey(this IRestRequest request)
+        public static IRestRequest WithRequestKey(this IRestRequest request, string requestKey)
         {
-            request.AddHeader(RequestKeyProperty, RequestKeyValue ?? "undefined");
+            request.AddHeader(RequestKeyProperty, requestKey ?? "undefined");
             return request;
         }
 
-        public static IRestClient WithAccountId(this IRestClient client)
+        public static IRestClient WithAccountId(this IRestClient client, string accountId)
         {
-            client.AddDefaultHeader(AccountIdProperty, AccountIdValue ?? "undefined");
+            client.AddDefaultHeader(AccountIdProperty, accountId ?? "undefined");
             return client;
         }
 
-        public static IRestRequest WithAccountId(this IRestRequest request)
+        public static IRestRequest WithAccountId(this IRestRequest request, string accountId)
         {
-            request.AddHeader(AccountIdProperty, AccountIdValue ?? "undefined");
+            request.AddHeader(AccountIdProperty, accountId ?? "undefined");
             return request;
         }
 
-        public static IRestClient WithHeaders(this IRestClient client)
+        public static IRestClient WithHeaders(this IRestClient client, string requestKey, string accountId)
         {
-            return client.WithRequestKey().WithAccountId();
+            return client.WithRequestKey(requestKey).WithAccountId(accountId);
+        }
+
+        public static IRestRequest WithHeaders(this IRestRequest request, string requestKey, string accountId)
+        {
+            return request.WithRequestKey(requestKey).WithAccountId(accountId);
         }
     }
 }
