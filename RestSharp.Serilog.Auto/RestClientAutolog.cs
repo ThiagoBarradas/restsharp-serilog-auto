@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace RestSharp
@@ -103,6 +105,17 @@ namespace RestSharp
             return response;
         }
 
+        public override async Task<IRestResponse<T>> ExecuteTaskAsync<T>(
+            IRestRequest request,
+            CancellationToken token,
+            Method httpMethod)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var response = await base.ExecuteTaskAsync<T>(request, token).ConfigureAwait(false);
+            this.LogRequestAndResponse(response, stopwatch);
+
+            return response;
+        }
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
             if (this.Configuration.LoggerConfiguration != null)

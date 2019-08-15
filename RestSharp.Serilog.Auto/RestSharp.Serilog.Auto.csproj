@@ -2,17 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Thiago Barradas</Authors>
-    <Company>Thiago Barradas</Company>
-    <Description>Automatic log communication (request and response) from RestSharp using Serilog.</Description>
-    <PackageProjectUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</PackageProjectUrl>
+    <Authors>Yaseer Arafat</Authors>
+    <Company>Yaseer Arafat</Company>
+    <Description>Automatic log communication (request and response) from RestSharp using Serilog.
+Extendd from Thiago Barradas</Description>
+    <PackageProjectUrl>https://github.com/emonarafat/restsharp-serilog-auto</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/ThiagoBarradas/restsharp-serilog-auto</RepositoryUrl>
-    <Copyright>Ⓒ Thiago Barradas</Copyright>
+    <RepositoryUrl>https://github.com/emonarafat/restsharp-serilog-auto</RepositoryUrl>
+    <Copyright>Ⓒ Yaseer Arafat</Copyright>
     <PackageIconUrl>https://i.imgur.com/GkciSHC.png</PackageIconUrl> 
     <OutputType>Library</OutputType>
     <StartupObject />
-    <PackageTags>restsharp, serilog, autolog, log, seq, splunk, console, sink, core, framework, standard</PackageTags>   
+    <PackageTags>restsharp, serilog, autolog, log, seq, splunk, console, sink, core, framework, standard</PackageTags>
+    <Product>RestSharp.Serilog.Auto.Extented</Product>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>RestSharp.Serilog.Auto.Extented</PackageId>
+    <Version>1.1.0</Version>   
   </PropertyGroup>
 
   <ItemGroup>
