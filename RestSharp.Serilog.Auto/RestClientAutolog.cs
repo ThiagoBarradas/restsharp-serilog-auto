@@ -105,11 +105,22 @@
 
     public override async Task<IRestResponse<T>> ExecuteTaskAsync<T>(
       IRestRequest request,
+      CancellationToken token)
+    {
+      var stopwatch = Stopwatch.StartNew();
+      var response = await base.ExecuteTaskAsync<T>(request, token).ConfigureAwait(false);
+      LogRequestAndResponse(response, stopwatch);
+
+      return response;
+    }
+
+    public override async Task<IRestResponse<T>> ExecuteTaskAsync<T>(
+      IRestRequest request,
       CancellationToken token,
       Method httpMethod)
     {
       var stopwatch = Stopwatch.StartNew();
-      var response = await base.ExecuteTaskAsync<T>(request, token).ConfigureAwait(false);
+      var response = await base.ExecuteTaskAsync<T>(request, token, httpMethod).ConfigureAwait(false);
       LogRequestAndResponse(response, stopwatch);
 
       return response;
@@ -258,31 +269,31 @@
       string[] ignoredProperties = GetIgnoredProperties(response.Request);
       var properties = new Dictionary<string, object>
       {
-        { "Agent", "RestSharp" },
-        { "ElapsedMilliseconds", stopwatch.ElapsedMilliseconds },
-        { "Method", response.Request.Method.ToString() },
-        { "Url", uri.AbsoluteUri },
-        { "Host", uri.Host },
-        { "Path", uri.AbsolutePath },
-        { "Port", uri.Port },
-        { "RequestKey", GetRequestKey(response.Request) },
-        { "AccountId", GetAccountId(response.Request) },
-        { "QueryString", uri.Query },
-        { "Query", GetRequestQueryStringAsObject(response.Request) },
-        { "RequestBody", GetRequestBody(response.Request) },
-        { "RequestHeaders", GetRequestHeaders(response.Request) },
-        { "StatusCode", (int)response.StatusCode },
-        { "StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX" },
-        { "StatusDescription", response.StatusDescription?.Replace(" ", "") },
-        { "ResponseStatus", response.ResponseStatus.ToString() },
-        { "ProtocolVersion", response.ProtocolVersion },
-        { "IsSuccessful", response.IsSuccessful },
-        { "ErrorMessage", response.ErrorMessage },
-        { "ErrorException", response.ErrorException },
-        { "ResponseContent", GetResponseContent(response) },
-        { "ContentLength", response.ContentLength },
-        { "ContentType", response.ContentType },
-        { "ResponseHeaders", GetResponseHeaders(response) }
+        {"Agent", "RestSharp"},
+        {"ElapsedMilliseconds", stopwatch.ElapsedMilliseconds},
+        {"Method", response.Request.Method.ToString()},
+        {"Url", uri.AbsoluteUri},
+        {"Host", uri.Host},
+        {"Path", uri.AbsolutePath},
+        {"Port", uri.Port},
+        {"RequestKey", GetRequestKey(response.Request)},
+        {"AccountId", GetAccountId(response.Request)},
+        {"QueryString", uri.Query},
+        {"Query", GetRequestQueryStringAsObject(response.Request)},
+        {"RequestBody", GetRequestBody(response.Request)},
+        {"RequestHeaders", GetRequestHeaders(response.Request)},
+        {"StatusCode", (int) response.StatusCode},
+        {"StatusCodeFamily", ((int) response.StatusCode).ToString()[0] + "XX"},
+        {"StatusDescription", response.StatusDescription?.Replace(" ", "")},
+        {"ResponseStatus", response.ResponseStatus.ToString()},
+        {"ProtocolVersion", response.ProtocolVersion},
+        {"IsSuccessful", response.IsSuccessful},
+        {"ErrorMessage", response.ErrorMessage},
+        {"ErrorException", response.ErrorException},
+        {"ResponseContent", GetResponseContent(response)},
+        {"ContentLength", response.ContentLength},
+        {"ContentType", response.ContentType},
+        {"ResponseHeaders", GetResponseHeaders(response)}
       };
 
       foreach (var property in properties)

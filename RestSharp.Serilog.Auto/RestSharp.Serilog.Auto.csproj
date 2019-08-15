@@ -14,11 +14,11 @@ Extendd from Thiago Barradas</Description>
     <StartupObject />
     <PackageTags>restsharp, serilog, autolog, log, seq, splunk, console, sink, core, framework, standard</PackageTags>
     <Product>RestSharp.Serilog.Auto.Extented</Product>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.1.13.0</AssemblyVersion>
+    <FileVersion>1.1.13.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>RestSharp.Serilog.Auto.Extented</PackageId>
-    <Version>1.1.12</Version>
+    <Version>1.1.13</Version>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl />   
   </PropertyGroup>
