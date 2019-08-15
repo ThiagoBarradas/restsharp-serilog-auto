@@ -1,327 +1,314 @@
-﻿using JsonMasking;
-using PackUtils;
-using Serilog;
-using Serilog.Context;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-
-namespace RestSharp
+﻿namespace RestSharp
 {
-    public class RestClientAutolog : RestClient
+  using System;
+  using System.Collections.Generic;
+  using System.Diagnostics;
+  using System.Linq;
+  using System.Threading;
+  using System.Threading.Tasks;
+  using System.Web;
+  using global::Serilog;
+  using global::Serilog.Context;
+  using JsonMasking;
+  using PackUtils;
+
+  public class RestClientAutolog : RestClient
+  {
+    #region Constructors and Destructors
+
+    public RestClientAutolog(RestClientAutologConfiguration configuration)
     {
-        public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
-
-        public RestClientAutologConfiguration Configuration { get; set; }
-
-        public RestClientAutolog(RestClientAutologConfiguration configuration)
-        {
-            this.Startup(configuration);
-        }
-
-        public RestClientAutolog(Uri baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
-        {
-            this.Startup(configuration);
-        }
-
-        public RestClientAutolog(string baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
-        {
-            this.Startup(configuration);
-        }
-
-        public RestClientAutolog(LoggerConfiguration loggerConfiguration)
-        {
-            this.Startup(new RestClientAutologConfiguration()
-            {
-                LoggerConfiguration = loggerConfiguration
-            });
-        }
-
-        public RestClientAutolog(Uri baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
-        {
-            this.Startup(new RestClientAutologConfiguration()
-            {
-                LoggerConfiguration = loggerConfiguration
-            });
-        }
-
-        public RestClientAutolog(string baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
-        {
-            this.Startup(new RestClientAutologConfiguration()
-            {
-                LoggerConfiguration = loggerConfiguration
-            });
-        }
-
-        public RestClientAutolog(string baseUrl, string message) : base(baseUrl)
-        {
-            this.Startup(new RestClientAutologConfiguration()
-            {
-                MessageTemplateForError = message,
-                MessageTemplateForSuccess = message
-            });
-        }
-
-        public RestClientAutolog(string baseUrl) : base(baseUrl)
-        {
-            this.Startup(null);
-        }
-
-        public RestClientAutolog(Uri baseUrl) : base(baseUrl)
-        {
-            this.Startup(null);
-        }
-
-        public RestClientAutolog()
-        {
-            this.Startup(null);
-        }
-
-        private void Startup(RestClientAutologConfiguration configuration)
-        {
-            if (configuration == null)
-            { 
-                configuration = (GlobalConfiguration != null)
-                    ? GlobalConfiguration.Clone()
-                    : new RestClientAutologConfiguration();
-            }
-
-            this.Configuration = configuration;
-        }
-
-        public override IRestResponse Execute(IRestRequest request)
-        {
-            var stopwatch = Stopwatch.StartNew();
-
-            var response = base.Execute(request);
-            stopwatch.Stop(); 
-
-            this.LogRequestAndResponse(response, stopwatch);
-
-            return response;
-        }
-
-        public override async Task<IRestResponse<T>> ExecuteTaskAsync<T>(
-            IRestRequest request,
-            CancellationToken token,
-            Method httpMethod)
-        {
-            var stopwatch = Stopwatch.StartNew();
-            var response = await base.ExecuteTaskAsync<T>(request, token).ConfigureAwait(false);
-            this.LogRequestAndResponse(response, stopwatch);
-
-            return response;
-        }
-        private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
-        {
-            if (this.Configuration.LoggerConfiguration != null)
-            {
-                Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
-            }
-
-            var uri = this.BuildUri(response.Request);
-            string[] ignoredProperties = this.GetIgnoredProperties(response.Request);
-            var properties = new Dictionary<string, object>();
-
-            properties.Add("Agent", "RestSharp");
-            properties.Add("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
-            properties.Add("Method", response.Request.Method.ToString());
-            properties.Add("Url", uri.AbsoluteUri);
-            properties.Add("Host", uri.Host);
-            properties.Add("Path", uri.AbsolutePath);
-            properties.Add("Port", uri.Port);
-            properties.Add("RequestKey", this.GetRequestKey(response.Request));
-            properties.Add("AccountId", this.GetAccountId(response.Request));
-            properties.Add("QueryString", uri.Query);
-            properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request));
-            properties.Add("RequestBody", this.GetRequestBody(response.Request));
-            properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request));
-            properties.Add("StatusCode", (int)response.StatusCode);
-            properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
-            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
-            properties.Add("ResponseStatus", response.ResponseStatus.ToString());
-            properties.Add("ProtocolVersion", response.ProtocolVersion);
-            properties.Add("IsSuccessful", response.IsSuccessful);
-            properties.Add("ErrorMessage", response.ErrorMessage);
-            properties.Add("ErrorException", response.ErrorException);
-            properties.Add("ResponseContent", this.GetResponseContent(response));
-            properties.Add("ContentLength", response.ContentLength);
-            properties.Add("ContentType", response.ContentType);
-            properties.Add("ResponseHeaders", this.GetResponseHeaders(response));
-
-            foreach(var property in properties)
-            {
-                if (ignoredProperties.Contains(property.Key) == false)
-                {
-                    LogContext.PushProperty(property.Key, property.Value);
-                }
-            }
-
-            if (response.IsSuccessful)
-            {
-                Log.Information(this.Configuration.MessageTemplateForSuccess);
-            }
-            else
-            {
-                Log.Error(this.Configuration.MessageTemplateForSuccess);
-            }
-        }
-
-        private string[] GetIgnoredProperties(IRestRequest request)
-        {
-            var ignoredProperties = request.Parameters.Where(p => 
-                p.Type == ParameterType.HttpHeader && p.Name == "LogIgnored")
-                .FirstOrDefault();
-
-            if (ignoredProperties?.Value == null)
-            {
-                return new string[] { };
-            }
-
-            return ignoredProperties.Value.ToString().Split(',');
-        }
-
-        private object GetRequestKey(IRestRequest request)
-        {
-            var requestKey = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "RequestKey").FirstOrDefault();
-            return requestKey?.Value;
-        }
-
-        private object GetAccountId(IRestRequest request)
-        {
-            var accountId = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "AccountId").FirstOrDefault();
-            return accountId?.Value;
-        }
-
-        private object GetRequestQueryStringAsObject(IRestRequest request)
-        {
-            var result = new Dictionary<string, string>();
-            var parameters = request.Parameters.Where(p => p.Type == ParameterType.QueryString);
-            var grouped = parameters.GroupBy(r => r.Name);
-
-            foreach(var group in grouped)
-            {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
-            }
-
-            return result.Any() ? result : null;
-        }
-
-        private object GetRequestBody(IRestRequest request)
-        {
-            var body = request?.Parameters?.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
-
-            var isJson = request?.Parameters?.Exists(p => 
-                (p.Type == ParameterType.HttpHeader &&
-                p.Name == "Content-Type" && 
-                p.Value?.ToString().Contains("json") == true)
-                ||
-                (p.Type == ParameterType.RequestBody &&
-                p.Name?.ToString().Contains("json") == true))
-                ?? false;
-
-            var isForm = request?.Parameters?.Exists(p =>
-                p.Type == ParameterType.HttpHeader &&
-                p.Name == "Content-Type" &&
-                p.Value?.ToString().Contains("x-www-form-urlencoded") == true) 
-                ?? false;
-
-            if (body != null && body.Value != null)
-            {
-                if (isJson)
-                {
-                    return this.GetContentAsObjectByContentTypeJson(body.Value.ToString(), true, this.Configuration.JsonBlacklist);
-                }
-                
-                if (isForm)
-                {
-                    return this.GetContentAsObjectByContentTypeForm(body.Value.ToString());
-                }
-            }
-
-            return body?.Value;
-        }
-
-        private object GetResponseContent(IRestResponse response)
-        {
-            var content = response.Content;
-
-            bool isJson = response.ContentType?.Contains("json") == true;
-                
-            if (content != null && isJson == true)
-            {
-                return this.GetContentAsObjectByContentTypeJson(content, false, null);
-            }
-
-            return content;
-        }
-
-        private object GetContentAsObjectByContentTypeForm(string content)
-        {
-            var result = new Dictionary<string, string>();
-            var parts = content.Split('&');
-            var partsKeyValue = parts.Select(r =>
-                new
-                {
-                    Key = HttpUtility.UrlDecode(r.Split('=').FirstOrDefault()),
-                    Value = HttpUtility.UrlDecode(r.Split('=').Skip(1).LastOrDefault())
-                });
-
-            var grouped = partsKeyValue.GroupBy(r => r.Key);
-            foreach (var group in grouped)
-            {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
-            }
-
-            return result;
-        }
-
-        private object GetContentAsObjectByContentTypeJson(string content, bool maskJson, string[] blacklist)
-        {
-            try
-            {
-                if (maskJson == true && blacklist?.Any() == true)
-                {
-                    content = content.MaskFields(blacklist, "******");
-                }
-
-                return content.DeserializeAsObject();
-            }
-            catch (Exception) { }
-
-            return content;
-        }
-
-        private object GetRequestHeaders(IRestRequest request)
-        {
-            var result = new Dictionary<string, string>();
-            var parameters = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader);
-            var grouped = parameters.GroupBy(r => r.Name);
-
-            foreach (var group in grouped)
-            {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
-            }
-
-            return result;
-        }
-
-        private object GetResponseHeaders(IRestResponse response)
-        {
-            var result = new Dictionary<string, string>();
-            var parameters = response?.Headers ?? new List<Parameter>();
-            var grouped = parameters.GroupBy(r => r.Name);
-
-            foreach (var group in grouped)
-            {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
-            }
-
-            return result.Any() ? result : null;
-        }
+      Startup(configuration);
     }
+
+    public RestClientAutolog(Uri baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
+    {
+      Startup(configuration);
+    }
+
+    public RestClientAutolog(string baseUrl, RestClientAutologConfiguration configuration) : base(baseUrl)
+    {
+      Startup(configuration);
+    }
+
+    public RestClientAutolog(LoggerConfiguration loggerConfiguration)
+    {
+      Startup(new RestClientAutologConfiguration
+      {
+        LoggerConfiguration = loggerConfiguration
+      });
+    }
+
+    public RestClientAutolog(Uri baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
+    {
+      Startup(new RestClientAutologConfiguration
+      {
+        LoggerConfiguration = loggerConfiguration
+      });
+    }
+
+    public RestClientAutolog(string baseUrl, LoggerConfiguration loggerConfiguration) : base(baseUrl)
+    {
+      Startup(new RestClientAutologConfiguration
+      {
+        LoggerConfiguration = loggerConfiguration
+      });
+    }
+
+    public RestClientAutolog(string baseUrl, string message) : base(baseUrl)
+    {
+      Startup(new RestClientAutologConfiguration
+      {
+        MessageTemplateForError = message,
+        MessageTemplateForSuccess = message
+      });
+    }
+
+    public RestClientAutolog(string baseUrl) : base(baseUrl)
+    {
+      Startup(null);
+    }
+
+    public RestClientAutolog(Uri baseUrl) : base(baseUrl)
+    {
+      Startup(null);
+    }
+
+    public RestClientAutolog()
+    {
+      Startup(null);
+    }
+
+    #endregion
+
+    #region Public Properties
+
+    public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
+
+    public RestClientAutologConfiguration Configuration { get; set; }
+
+    #endregion
+
+    #region Public Methods and Operators
+
+    public override IRestResponse Execute(IRestRequest request)
+    {
+      var stopwatch = Stopwatch.StartNew();
+
+      var response = base.Execute(request);
+      stopwatch.Stop();
+
+      LogRequestAndResponse(response, stopwatch);
+
+      return response;
+    }
+
+    public override async Task<IRestResponse<T>> ExecuteTaskAsync<T>(
+      IRestRequest request,
+      CancellationToken token,
+      Method httpMethod)
+    {
+      var stopwatch = Stopwatch.StartNew();
+      var response = await base.ExecuteTaskAsync<T>(request, token).ConfigureAwait(false);
+      LogRequestAndResponse(response, stopwatch);
+
+      return response;
+    }
+
+    #endregion
+
+    #region Methods
+
+    private object GetAccountId(IRestRequest request)
+    {
+      var accountId = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "AccountId")
+        .FirstOrDefault();
+      return accountId?.Value;
+    }
+
+    private object GetContentAsObjectByContentTypeForm(string content)
+    {
+      var result = new Dictionary<string, string>();
+      var parts = content.Split('&');
+      var partsKeyValue = parts.Select(r =>
+        new
+        {
+          Key = HttpUtility.UrlDecode(r.Split('=').FirstOrDefault()),
+          Value = HttpUtility.UrlDecode(r.Split('=').Skip(1).LastOrDefault())
+        });
+
+      var grouped = partsKeyValue.GroupBy(r => r.Key);
+      foreach (var group in grouped) result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+
+      return result;
+    }
+
+    private object GetContentAsObjectByContentTypeJson(string content, bool maskJson, string[] blacklist)
+    {
+      try
+      {
+        if (maskJson && blacklist?.Any() == true) content = content.MaskFields(blacklist, "******");
+
+        return content.DeserializeAsObject();
+      }
+      catch (Exception)
+      {
+      }
+
+      return content;
+    }
+
+    private string[] GetIgnoredProperties(IRestRequest request)
+    {
+      var ignoredProperties = request.Parameters.Where(p =>
+          p.Type == ParameterType.HttpHeader && p.Name == "LogIgnored")
+        .FirstOrDefault();
+
+      if (ignoredProperties?.Value == null) return new string[] { };
+
+      return ignoredProperties.Value.ToString().Split(',');
+    }
+
+    private object GetRequestBody(IRestRequest request)
+    {
+      var body = request?.Parameters?.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
+
+      var isJson = request?.Parameters?.Exists(p =>
+                     p.Type == ParameterType.HttpHeader &&
+                     p.Name == "Content-Type" &&
+                     p.Value?.ToString().Contains("json") == true
+                     ||
+                     p.Type == ParameterType.RequestBody &&
+                     p.Name?.ToString().Contains("json") == true)
+                   ?? false;
+
+      var isForm = request?.Parameters?.Exists(p =>
+                     p.Type == ParameterType.HttpHeader &&
+                     p.Name == "Content-Type" &&
+                     p.Value?.ToString().Contains("x-www-form-urlencoded") == true)
+                   ?? false;
+
+      if (body != null && body.Value != null)
+      {
+        if (isJson)
+          return GetContentAsObjectByContentTypeJson(body.Value.ToString(), true, Configuration.JsonBlacklist);
+
+        if (isForm) return GetContentAsObjectByContentTypeForm(body.Value.ToString());
+      }
+
+      return body?.Value;
+    }
+
+    private object GetRequestHeaders(IRestRequest request)
+    {
+      var result = new Dictionary<string, string>();
+      var parameters = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader);
+      var grouped = parameters.GroupBy(r => r.Name);
+
+      foreach (var group in grouped) result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+
+      return result;
+    }
+
+    private object GetRequestKey(IRestRequest request)
+    {
+      var requestKey = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "RequestKey")
+        .FirstOrDefault();
+      return requestKey?.Value;
+    }
+
+    private object GetRequestQueryStringAsObject(IRestRequest request)
+    {
+      var result = new Dictionary<string, string>();
+      var parameters = request.Parameters.Where(p => p.Type == ParameterType.QueryString);
+      var grouped = parameters.GroupBy(r => r.Name);
+
+      foreach (var group in grouped) result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+
+      return result.Any() ? result : null;
+    }
+
+    private object GetResponseContent(IRestResponse response)
+    {
+      var content = response.Content;
+
+      bool isJson = response.ContentType?.Contains("json") == true;
+
+      if (content != null && isJson) return GetContentAsObjectByContentTypeJson(content, false, null);
+
+      return content;
+    }
+
+    private object GetResponseHeaders(IRestResponse response)
+    {
+      var result = new Dictionary<string, string>();
+      var parameters = response?.Headers ?? new List<Parameter>();
+      var grouped = parameters.GroupBy(r => r.Name);
+
+      foreach (var group in grouped) result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+
+      return result.Any() ? result : null;
+    }
+
+    private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
+    {
+      if (Configuration.LoggerConfiguration != null) Log.Logger = Configuration.LoggerConfiguration.CreateLogger();
+
+      var uri = BuildUri(response.Request);
+      string[] ignoredProperties = GetIgnoredProperties(response.Request);
+      var properties = new Dictionary<string, object>
+      {
+        { "Agent", "RestSharp" },
+        { "ElapsedMilliseconds", stopwatch.ElapsedMilliseconds },
+        { "Method", response.Request.Method.ToString() },
+        { "Url", uri.AbsoluteUri },
+        { "Host", uri.Host },
+        { "Path", uri.AbsolutePath },
+        { "Port", uri.Port },
+        { "RequestKey", GetRequestKey(response.Request) },
+        { "AccountId", GetAccountId(response.Request) },
+        { "QueryString", uri.Query },
+        { "Query", GetRequestQueryStringAsObject(response.Request) },
+        { "RequestBody", GetRequestBody(response.Request) },
+        { "RequestHeaders", GetRequestHeaders(response.Request) },
+        { "StatusCode", (int)response.StatusCode },
+        { "StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX" },
+        { "StatusDescription", response.StatusDescription?.Replace(" ", "") },
+        { "ResponseStatus", response.ResponseStatus.ToString() },
+        { "ProtocolVersion", response.ProtocolVersion },
+        { "IsSuccessful", response.IsSuccessful },
+        { "ErrorMessage", response.ErrorMessage },
+        { "ErrorException", response.ErrorException },
+        { "ResponseContent", GetResponseContent(response) },
+        { "ContentLength", response.ContentLength },
+        { "ContentType", response.ContentType },
+        { "ResponseHeaders", GetResponseHeaders(response) }
+      };
+
+      foreach (var property in properties)
+      {
+        if (ignoredProperties.Contains(property.Key) == false)
+          LogContext.PushProperty(property.Key, property.Value);
+      }
+
+      if (response.IsSuccessful)
+        Log.Information(Configuration.MessageTemplateForSuccess);
+      else
+        Log.Error(Configuration.MessageTemplateForSuccess);
+    }
+
+    private void Startup(RestClientAutologConfiguration configuration)
+    {
+      if (configuration == null)
+      {
+        configuration = GlobalConfiguration != null
+          ? GlobalConfiguration.Clone()
+          : new RestClientAutologConfiguration();
+      }
+
+      Configuration = configuration;
+    }
+
+    #endregion
+  }
 }

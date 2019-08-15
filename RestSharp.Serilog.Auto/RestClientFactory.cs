@@ -1,50 +1,56 @@
-﻿using System;
-
-namespace RestSharp.Serilog.Auto
+﻿namespace RestSharp.Serilog.Auto
 {
-    public interface IRestClientFactory
-    {
-        string RequestKey { get; set; }
+  using System;
 
-        string AccountId { get; set; }
+  public interface IRestClientFactory
+  {
+    #region Public Properties
 
-        IRestClient GetInstance(Uri uri);
+    string AccountId { get; set; }
+    string RequestKey { get; set; }
 
-        IRestClient GetInstance(string uri);
+    #endregion
 
-        IRestClient GetInstance(RestClientAutologConfiguration configuration);
+    #region Public Methods and Operators
 
-        IRestClient GetInstance();
-    }
+    IRestClient GetInstance(Uri uri);
 
-    public class RestClientFactory : IRestClientFactory
-    {
-        public string RequestKey { get; set; }
+    IRestClient GetInstance(string uri);
 
-        public string AccountId { get; set; }
+    IRestClient GetInstance(RestClientAutologConfiguration configuration);
 
-        public IRestClient GetInstance(Uri uri)
-        {
-            return new RestClientAutolog(uri)
-                .WithHeaders(this.RequestKey, this.AccountId);
-        }
+    IRestClient GetInstance();
 
-        public IRestClient GetInstance(string uri)
-        {
-            return new RestClientAutolog(uri)
-                .WithHeaders(this.RequestKey, this.AccountId);
-        }
+    #endregion
+  }
 
-        public IRestClient GetInstance(RestClientAutologConfiguration configuration)
-        {
-            return new RestClientAutolog(configuration)
-                .WithHeaders(this.RequestKey, this.AccountId);
-        }
+  public class RestClientFactory : IRestClientFactory
+  {
+    #region Public Properties
 
-        public IRestClient GetInstance()
-        {
-            return new RestClientAutolog()
-                .WithHeaders(this.RequestKey, this.AccountId);
-        }
-    }
+    public string AccountId { get; set; }
+    public string RequestKey { get; set; }
+
+    #endregion
+
+    #region Public Methods and Operators
+
+    public IRestClient GetInstance(Uri uri) =>
+      new RestClientAutolog(uri)
+        .WithHeaders(RequestKey, AccountId);
+
+    public IRestClient GetInstance(string uri) =>
+      new RestClientAutolog(uri)
+        .WithHeaders(RequestKey, AccountId);
+
+    public IRestClient GetInstance(RestClientAutologConfiguration configuration) =>
+      new RestClientAutolog(configuration)
+        .WithHeaders(RequestKey, AccountId);
+
+    public IRestClient GetInstance() =>
+      new RestClientAutolog()
+        .WithHeaders(RequestKey, AccountId);
+
+    #endregion
+  }
 }

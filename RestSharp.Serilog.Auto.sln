@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto", "RestSharp.Serilog.Auto\RestSharp.Serilog.Auto.csproj", "{31BE75BA-AFA9-4A08-9AF2-443A97094062}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto.ConsoleTest", "RestSharp.Serilog.Auto.ConsoleTest\RestSharp.Serilog.Auto.ConsoleTest.csproj", "{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80069C55-050F-4C91-8195-1060B7A65D95}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Serilog.Auto.Tests", "RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj", "{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,14 +26,6 @@ Global
 		{31BE75BA-AFA9-4A08-9AF2-443A97094062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31BE75BA-AFA9-4A08-9AF2-443A97094062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31BE75BA-AFA9-4A08-9AF2-443A97094062}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
