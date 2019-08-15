@@ -15,7 +15,7 @@ IRestClient client = new RestClientAutolog("http://www.github.com");
 ## Install via NuGet
 
 ```
-PM> Install-Package RestSharp.Serilog.Auto
+PM> Install-Package RestSharp.Serilog.Auto.Extented
 ```
 
 ## How to use
