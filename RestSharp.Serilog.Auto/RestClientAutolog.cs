@@ -12,6 +12,8 @@ namespace RestSharp
 {
     public class RestClientAutolog : RestClient
     {
+        public Dictionary<string, object> AdditionalProperties { get; set; }
+
         public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
 
         public RestClientAutologConfiguration Configuration { get; set; }
@@ -114,6 +116,14 @@ namespace RestSharp
             string[] ignoredProperties = this.GetIgnoredProperties(response.Request);
             var properties = new Dictionary<string, object>();
 
+            if (this.AdditionalProperties?.Any() == true)
+            {
+                foreach(var item in this.AdditionalProperties)
+                {
+                    properties.Add(item.Key, item.Value);
+                }
+            }
+
             properties.Add("Agent", "RestSharp");
             properties.Add("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
             properties.Add("Method", response.Request.Method.ToString());
@@ -121,8 +131,6 @@ namespace RestSharp
             properties.Add("Host", uri.Host);
             properties.Add("Path", uri.AbsolutePath);
             properties.Add("Port", uri.Port);
-            properties.Add("RequestKey", this.GetRequestKey(response.Request));
-            properties.Add("AccountId", this.GetAccountId(response.Request));
             properties.Add("QueryString", uri.Query);
             properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request));
             properties.Add("RequestBody", this.GetRequestBody(response.Request));
@@ -170,18 +178,6 @@ namespace RestSharp
             }
 
             return ignoredProperties.Value.ToString().Split(',');
-        }
-
-        private object GetRequestKey(IRestRequest request)
-        {
-            var requestKey = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "RequestKey").FirstOrDefault();
-            return requestKey?.Value;
-        }
-
-        private object GetAccountId(IRestRequest request)
-        {
-            var accountId = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader && p.Name == "AccountId").FirstOrDefault();
-            return accountId?.Value;
         }
 
         private object GetRequestQueryStringAsObject(IRestRequest request)
