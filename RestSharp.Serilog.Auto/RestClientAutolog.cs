@@ -12,7 +12,7 @@ namespace RestSharp
 {
     public class RestClientAutolog : RestClient
     {
-        public Dictionary<string, object> AdditionalProperties { get; set; }
+        public Dictionary<string, string> AdditionalProperties { get; set; } = new Dictionary<string, string>();
 
         public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
 
