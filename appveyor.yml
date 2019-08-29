@@ -32,7 +32,7 @@ after_test:
   - dotnet pack --configuration Release /p:Version=%version%
 
 artifacts:
-  - path: RestSharp.Serilog.Auto\bin\Release\netstandard2.1\RestSharp.Serilog.Auto.dll
+  - path: RestSharp.Serilog.Auto\bin\Release\netstandard2.0\RestSharp.Serilog.Auto.dll
     name: RestSharp.Serilog.Auto.dll
   - path: RestSharp.Serilog.Auto\bin\Release\RestSharp.Serilog.Auto.%version%.nupkg
     name: RestSharp.Serilog.Auto.%version%.nupkg
