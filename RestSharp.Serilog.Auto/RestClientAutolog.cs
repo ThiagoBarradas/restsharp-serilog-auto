@@ -147,8 +147,9 @@ namespace RestSharp
             properties.Add("ContentLength", response.ContentLength);
             properties.Add("ContentType", response.ContentType);
             properties.Add("ResponseHeaders", this.GetResponseHeaders(response));
+            properties.Add("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
-            foreach(var property in properties)
+            foreach (var property in properties)
             {
                 if (ignoredProperties.Contains(property.Key) == false)
                 {
