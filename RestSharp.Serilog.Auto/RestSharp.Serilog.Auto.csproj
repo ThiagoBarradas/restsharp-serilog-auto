@@ -1,36 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Yaseer Arafat</Authors>
     <Company>Yaseer Arafat</Company>
     <Description>Automatic log communication (request and response) from RestSharp using Serilog.
-Extendd from Thiago Barradas</Description>
+      Extendd from Thiago Barradas</Description>
     <PackageProjectUrl>https://github.com/emonarafat/restsharp-serilog-auto</PackageProjectUrl>
     <RepositoryUrl>https://github.com/emonarafat/restsharp-serilog-auto</RepositoryUrl>
     <Copyright>Ⓒ Yaseer Arafat</Copyright>
-    <PackageIconUrl>https://i.imgur.com/GkciSHC.png</PackageIconUrl> 
+    <PackageIconUrl>https://i.imgur.com/GkciSHC.png</PackageIconUrl>
     <OutputType>Library</OutputType>
     <StartupObject />
     <PackageTags>restsharp, serilog, autolog, log, seq, splunk, console, sink, core, framework, standard</PackageTags>
-    <Product>RestSharp.Serilog.Auto.Extented</Product>
-    <AssemblyVersion>1.1.13.0</AssemblyVersion>
-    <FileVersion>1.1.13.0</FileVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>RestSharp.Serilog.Auto.Extented</PackageId>
-    <Version>1.1.13</Version>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl />   
+    <Version>1.0.1</Version>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="JsonMasking" Version="1.1.44" />
-    <PackageReference Include="PackUtils" Version="1.0.40" />
-    <PackageReference Include="RestSharp" Version="106.6.10" />
-    <PackageReference Include="Serilog" Version="2.8.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="JsonMasking" Version="1.1.3" />
+    <PackageReference Include="PackUtils" Version="1.0.26" />
+    <PackageReference Include="RestSharp" Version="106.5.4" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
-
 </Project>

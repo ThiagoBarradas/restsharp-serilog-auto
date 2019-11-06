@@ -1,56 +1,82 @@
 ﻿namespace RestSharp.Serilog.Auto
 {
-  using System;
+    using System;
 
-  public interface IRestClientFactory
-  {
-    #region Public Properties
+    /// <summary>
+    /// Defines the <see cref="IRestClientFactory" />
+    /// </summary>
+    public interface IRestClientFactory
+    {
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        IRestClient GetInstance();
 
-    string AccountId { get; set; }
-    string RequestKey { get; set; }
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="RestClientAutologConfiguration"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        IRestClient GetInstance(RestClientAutologConfiguration configuration);
 
-    #endregion
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="uri">The uri<see cref="string"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        IRestClient GetInstance(string uri);
 
-    #region Public Methods and Operators
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="uri">The uri<see cref="Uri"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        IRestClient GetInstance(Uri uri);
+    }
 
-    IRestClient GetInstance(Uri uri);
+    /// <summary>
+    /// Defines the <see cref="RestClientFactory" />
+    /// </summary>
+    public class RestClientFactory : IRestClientFactory
+    {
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        public IRestClient GetInstance()
+        {
+            return new RestClientAutolog();
+        }
 
-    IRestClient GetInstance(string uri);
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="RestClientAutologConfiguration"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        public IRestClient GetInstance(RestClientAutologConfiguration configuration)
+        {
+            return new RestClientAutolog(configuration);
+        }
 
-    IRestClient GetInstance(RestClientAutologConfiguration configuration);
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="uri">The uri<see cref="string"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        public IRestClient GetInstance(string uri)
+        {
+            return new RestClientAutolog(uri);
+        }
 
-    IRestClient GetInstance();
-
-    #endregion
-  }
-
-  public class RestClientFactory : IRestClientFactory
-  {
-    #region Public Properties
-
-    public string AccountId { get; set; }
-    public string RequestKey { get; set; }
-
-    #endregion
-
-    #region Public Methods and Operators
-
-    public IRestClient GetInstance(Uri uri) =>
-      new RestClientAutolog(uri)
-        .WithHeaders(RequestKey, AccountId);
-
-    public IRestClient GetInstance(string uri) =>
-      new RestClientAutolog(uri)
-        .WithHeaders(RequestKey, AccountId);
-
-    public IRestClient GetInstance(RestClientAutologConfiguration configuration) =>
-      new RestClientAutolog(configuration)
-        .WithHeaders(RequestKey, AccountId);
-
-    public IRestClient GetInstance() =>
-      new RestClientAutolog()
-        .WithHeaders(RequestKey, AccountId);
-
-    #endregion
-  }
+        /// <summary>
+        /// The GetInstance
+        /// </summary>
+        /// <param name="uri">The uri<see cref="Uri"/></param>
+        /// <returns>The <see cref="IRestClient"/></returns>
+        public IRestClient GetInstance(Uri uri)
+        {
+            return new RestClientAutolog(uri);
+        }
+    }
 }
