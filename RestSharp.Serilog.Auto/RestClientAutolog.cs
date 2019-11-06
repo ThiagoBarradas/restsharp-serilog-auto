@@ -189,11 +189,14 @@
         {
             try
             {
-                if (maskJson && blacklist?.Any() == true) content = content.MaskFields(blacklist, "******");
+                if (maskJson && blacklist?.Any() == true)
+                {
+                    content = content.MaskFields(blacklist, "******");
+                }
 
                 return content.DeserializeAsObject();
             }
-            catch
+            catch(Exception)
             {
             }
 
@@ -227,9 +230,15 @@
 
             if (body?.Value != null)
             {
-                if (isJson) return GetContentAsObjectByContentTypeJson(body.Value.ToString(), true, Configuration.JsonBlacklist);
+                if (isJson)
+                {
+                    return GetContentAsObjectByContentTypeJson(body.Value.ToString(), true, Configuration.JsonBlacklist);
+                }
 
-                if (isForm) return GetContentAsObjectByContentTypeForm(body.Value.ToString());
+                if (isForm)
+                {
+                    return GetContentAsObjectByContentTypeForm(body.Value.ToString());
+                }
             }
 
             return body?.Value;
@@ -265,7 +274,10 @@
 
             bool isJson = response.ContentType?.Contains("json") == true;
 
-            if (content != null && isJson) return GetContentAsObjectByContentTypeJson(content, false, null);
+            if (content != null && isJson)
+            {
+                return GetContentAsObjectByContentTypeJson(content, false, null);
+            }
 
             return content;
         }
@@ -289,7 +301,10 @@
         /// <param name="stopwatch">The stopwatch<see cref="Stopwatch"/></param>
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
-            if (Configuration.LoggerConfiguration != null) Log.Logger = Configuration.LoggerConfiguration.CreateLogger();
+            if (Configuration.LoggerConfiguration != null)
+            {
+                Log.Logger = Configuration.LoggerConfiguration.CreateLogger();
+            }
 
             var uri = BuildUri(response.Request);
             var ignoredProperties = GetIgnoredProperties(response.Request);
@@ -333,8 +348,14 @@
                 LogContext.PushProperty(property.Key, property.Value);
             }
 
-            if (response.IsSuccessful) Log.Information(Configuration.MessageTemplateForSuccess);
-            else Log.Error(Configuration.MessageTemplateForSuccess);
+            if (response.IsSuccessful)
+            {
+                Log.Information(Configuration.MessageTemplateForSuccess);
+            }
+            else
+            {
+                Log.Error(Configuration.MessageTemplateForSuccess);
+            }
         }
 
         /// <summary>
