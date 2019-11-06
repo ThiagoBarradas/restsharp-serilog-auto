@@ -44,16 +44,8 @@ namespace RestSharp
         /// </summary>
         public string MessageTemplateForError
         {
-            get
-            {
-                return (string.IsNullOrWhiteSpace(this._messageTemplateForError))
-                           ? RestClientAutologConfiguration.DefaultMessageTemplateForError
-                           : this._messageTemplateForError;
-            }
-            set
-            {
-                this._messageTemplateForError = value;
-            }
+            get => string.IsNullOrWhiteSpace(_messageTemplateForError) ? DefaultMessageTemplateForError : _messageTemplateForError;
+            set => _messageTemplateForError = value;
         }
 
         /// <summary>
@@ -61,25 +53,14 @@ namespace RestSharp
         /// </summary>
         public string MessageTemplateForSuccess
         {
-            get
-            {
-                return (string.IsNullOrWhiteSpace(this._messageTemplateForSuccess))
-                           ? RestClientAutologConfiguration.DefaultMessageTemplateForSuccess
-                           : this._messageTemplateForSuccess;
-            }
-            set
-            {
-                this._messageTemplateForSuccess = value;
-            }
+            get => string.IsNullOrWhiteSpace(_messageTemplateForSuccess) ? DefaultMessageTemplateForSuccess : _messageTemplateForSuccess;
+            set => _messageTemplateForSuccess = value;
         }
 
         /// <summary>
         /// The Clone
         /// </summary>
         /// <returns>The <see cref="RestClientAutologConfiguration"/></returns>
-        public RestClientAutologConfiguration Clone()
-        {
-            return (RestClientAutologConfiguration)this.MemberwiseClone();
-        }
+        public RestClientAutologConfiguration Clone() => (RestClientAutologConfiguration)MemberwiseClone();
     }
 }

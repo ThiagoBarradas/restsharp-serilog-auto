@@ -196,15 +196,16 @@ namespace RestSharp
 
                 return content.DeserializeAsObject();
             }
-            catch (Exception)
+            catch
             {
+                // Noncompliant
             }
 
             return content;
         }
 
         /// <summary>
-        /// The GetIgnoredProperties
+        /// Get Ignored Properties
         /// </summary>
         /// <param name="request">The request<see cref="IRestRequest"/></param>
         /// <returns>The <see cref="string[]"/></returns>
@@ -216,7 +217,7 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The GetRequestBody
+        /// Get Request Body
         /// </summary>
         /// <param name="request">The request<see cref="IRestRequest"/></param>
         /// <returns>The <see cref="object"/></returns>
@@ -245,11 +246,11 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The GetRequestHeaders
+        /// Get Request Headers
         /// </summary>
         /// <param name="request">The request<see cref="IRestRequest"/></param>
         /// <returns>The <see cref="object"/></returns>
-        private object GetRequestHeaders(IRestRequest request) => request.Parameters.Where(p => p.Type == ParameterType.HttpHeader).GroupBy(r => r.Name).ToDictionary(@group => @group.Key, @group => string.Join(",", @group.Select(r => r.Value)));
+        private static object GetRequestHeaders(IRestRequest request) => request.Parameters.Where(p => p.Type == ParameterType.HttpHeader).GroupBy(r => r.Name).ToDictionary(@group => @group.Key, @group => string.Join(",", @group.Select(r => r.Value)));
 
         /// <summary>
         /// The GetRequestQueryStringAsObject
@@ -264,7 +265,7 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The GetResponseContent
+        /// Get Response Content
         /// </summary>
         /// <param name="response">The response<see cref="IRestResponse"/></param>
         /// <returns>The <see cref="object"/></returns>
@@ -283,7 +284,7 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The GetResponseHeaders
+        ///  Get Response Headers
         /// </summary>
         /// <param name="response">The response<see cref="IRestResponse"/></param>
         /// <returns>The <see cref="object"/></returns>
@@ -295,7 +296,7 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The LogRequestAndResponse
+        ///  Log Request And Response
         /// </summary>
         /// <param name="response">The response<see cref="IRestResponse"/></param>
         /// <param name="stopwatch">The stopwatch<see cref="Stopwatch"/></param>
@@ -359,14 +360,15 @@ namespace RestSharp
         }
 
         /// <summary>
-        /// The Startup
+        /// Startup
         /// </summary>
         /// <param name="configuration">The configuration<see cref="RestClientAutologConfiguration"/></param>
         private void Startup(RestClientAutologConfiguration configuration)
         {
             if (configuration == null)
             {
-                configuration = GlobalConfiguration != null ? GlobalConfiguration.Clone() : new RestClientAutologConfiguration();
+                var autologConfiguration = GlobalConfiguration;
+                configuration = autologConfiguration != null ? autologConfiguration.Clone() : new RestClientAutologConfiguration();
             }
 
             Configuration = configuration;
