@@ -21,8 +21,7 @@
 
             RestClientAutolog restClientAutolog = (RestClientAutolog)restClient;
 
-            restClientAutolog.AddDefaultHeader(key, value);
-            restClientAutolog.AdditionalProperties[key] = value;
+            restClientAutolog.AddDefaultParameter(key, value, ParameterType.HttpHeader);
 
             return restClientAutolog;
         }
