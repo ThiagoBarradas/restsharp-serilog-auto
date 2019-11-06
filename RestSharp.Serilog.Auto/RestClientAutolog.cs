@@ -196,7 +196,7 @@
 
                 return content.DeserializeAsObject();
             }
-            catch(Exception)
+            catch (Exception)
             {
             }
 
