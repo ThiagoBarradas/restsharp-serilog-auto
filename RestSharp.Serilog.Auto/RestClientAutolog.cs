@@ -1,4 +1,4 @@
-﻿namespace RestSharp
+namespace RestSharp
 {
     using global::Serilog;
     using global::Serilog.Context;

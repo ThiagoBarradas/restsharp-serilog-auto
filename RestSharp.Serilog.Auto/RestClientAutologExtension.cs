@@ -1,4 +1,4 @@
-﻿namespace RestSharp.Serilog.Auto
+namespace RestSharp.Serilog.Auto
 {
     /// <summary>
     /// Defines the <see cref="RestClientAutologExtension" />

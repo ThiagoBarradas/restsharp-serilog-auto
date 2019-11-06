@@ -6,7 +6,7 @@
     <Description>Automatic log communication (request and response) from RestSharp using Serilog.Extendd from Thiago Barradas</Description>
     <PackageProjectUrl>https://github.com/emonarafat/restsharp-serilog-auto</PackageProjectUrl>
     <RepositoryUrl>https://github.com/emonarafat/restsharp-serilog-auto</RepositoryUrl>
-    <Copyright>Ⓒ Yaseer Arafat</Copyright>
+    <Copyright>Ⓒ</Copyright>
     <PackageIconUrl>https://i.imgur.com/GkciSHC.png</PackageIconUrl>
     <OutputType>Library</OutputType>
     <StartupObject />
