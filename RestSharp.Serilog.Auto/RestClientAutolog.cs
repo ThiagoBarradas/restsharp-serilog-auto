@@ -1,4 +1,5 @@
 ﻿using JsonMasking;
+using Newtonsoft.Json;
 using PackUtils;
 using Serilog;
 using Serilog.Context;
@@ -201,11 +202,13 @@ namespace RestSharp
 
             var isJson = request?.Parameters?.Exists(p => 
                 (p.Type == ParameterType.HttpHeader &&
-                p.Name == "Content-Type" && 
+                (p.Name == "Content-Type") && 
                 p.Value?.ToString().Contains("json") == true)
                 ||
                 (p.Type == ParameterType.RequestBody &&
-                p.Name?.ToString().Contains("json") == true))
+                 p.Name?.ToString().Contains("json") == true ||
+                 p.DataFormat == DataFormat.Json ||
+                 p.ContentType?.Contains("application/json") == true))
                 ?? false;
 
             var isForm = request?.Parameters?.Exists(p =>
@@ -218,7 +221,8 @@ namespace RestSharp
             {
                 if (isJson)
                 {
-                    return this.GetContentAsObjectByContentTypeJson(body.Value.ToString(), true, this.Configuration.JsonBlacklist);
+                    var content = JsonConvert.SerializeObject(body.Value);
+                    return this.GetContentAsObjectByContentTypeJson(content, true, this.Configuration.JsonBlacklist);
                 }
                 
                 if (isForm)
