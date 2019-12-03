@@ -206,9 +206,9 @@ namespace RestSharp
                 p.Value?.ToString().Contains("json") == true)
                 ||
                 (p.Type == ParameterType.RequestBody &&
-                 p.Name?.ToString().Contains("json") == true ||
+                (p.Name?.ToString().Contains("json") == true ||
                  p.DataFormat == DataFormat.Json ||
-                 p.ContentType?.Contains("application/json") == true))
+                 p.ContentType?.Contains("application/json") == true)))
                 ?? false;
 
             var isForm = request?.Parameters?.Exists(p =>
@@ -221,7 +221,7 @@ namespace RestSharp
             {
                 if (isJson)
                 {
-                    var content = JsonConvert.SerializeObject(body.Value);
+                    var content = (body.Value is string) ? body.Value.ToString() : JsonConvert.SerializeObject(body.Value);
                     return this.GetContentAsObjectByContentTypeJson(content, true, this.Configuration.JsonBlacklist);
                 }
                 
