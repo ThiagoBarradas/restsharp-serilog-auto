@@ -1,5 +1,6 @@
 using Serilog;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace RestSharp.Serilog.Auto.Tests
@@ -357,6 +358,130 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.True(restResponse.IsSuccessful);
         }
 
+        [Fact]
+        public void Should_Execute_RestRequest_With_ValidJson_OnlyHeader()
+        {  
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type","application/json");
+
+            //act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal(Method.POST, restResponse.Request.Method);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Single(restResponse.Request.Parameters);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_ValidJson_OnlyRequestBody()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddParameter("Name", "Value", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal(Method.POST, restResponse.Request.Method);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Single(restResponse.Request.Parameters);
+            Assert.True(restResponse.IsSuccessful);
+        }
+        
+        [Fact]
+        public void Should_Execute_RestRequest_With_ValidJson_WithoutName()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddParameter("", "Value", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // act
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal(Method.POST, restResponse.Request.Method);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Single(restResponse.Request.Parameters);
+            Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_ValidJson_Only_With_DataFormat()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddParameter("", "", ParameterType.RequestBody);
+            restRequest.Parameters.FirstOrDefault().DataFormat = DataFormat.Json;
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal(Method.POST, restResponse.Request.Method);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Single(restResponse.Request.Parameters);
+            Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
+            Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Value);
+            Assert.Equal(DataFormat.Json, restResponse.Request.Parameters.FirstOrDefault().DataFormat);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_ValidJson_Only_With_ContentType()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddParameter("", "", ParameterType.RequestBody);
+            restRequest.Parameters.FirstOrDefault().ContentType = "application/json";
+
+            // act
+            var restResponse = client.Execute(restRequest);
+
+            // assert
+
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal(Method.POST, restResponse.Request.Method);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Single(restResponse.Request.Parameters);
+            Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
+            Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Value);
+            Assert.Equal("application/json", restResponse.Request.Parameters.FirstOrDefault().ContentType);
+            Assert.True(restResponse.IsSuccessful);
+        }
     }
 
     public class User
