@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="JsonMasking" Version="1.1.44" />
-    <PackageReference Include="PackUtils" Version="1.0.55" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3-dev-00748" />
+    <PackageReference Include="PackUtils" Version="1.0.57" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.1-dev-00155" />
   </ItemGroup>
 

@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace RestSharp
@@ -104,6 +106,30 @@ namespace RestSharp
             this.LogRequestAndResponse(response, stopwatch);
 
             return response;
+        }
+
+        public new Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            var response = base.ExecuteAsync(request, token).GetAwaiter().GetResult();
+            stopwatch.Stop();
+
+            this.LogRequestAndResponse(response, stopwatch);
+
+            return Task.FromResult(response) ;
+        }
+
+        public new Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            var response = base.ExecuteAsync<T>(request, token).GetAwaiter().GetResult();
+            stopwatch.Stop();
+
+            this.LogRequestAndResponse(response, stopwatch);
+
+            return Task.FromResult(response);
         }
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)

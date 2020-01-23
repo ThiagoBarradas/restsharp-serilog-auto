@@ -174,7 +174,7 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.NotNull(client.Configuration.LoggerConfiguration);
             Assert.Equal("http://www.github.com/", client.BaseUrl.AbsoluteUri);
         }
-
+        
         [Fact]
         public void Should_Construct_With_BaseUrlAsString_And_RestClientAutologConfiguration_Null()
         {
@@ -264,6 +264,32 @@ namespace RestSharp.Serilog.Auto.Tests
         }
 
         [Fact]
+        public void Should_Execute_RestRequest_With_GenericType_And_Success_Async()
+        {
+            // arrange
+            var client = new RestClientAutolog("https://reqres.in/api/users/1");
+            var restRequest = new RestRequest(Method.GET);
+            restRequest.AddQueryParameter("somequery", "test1");
+            restRequest.AddQueryParameter("somequery", "test2");
+            restRequest.AddQueryParameter("somequery2", "test3");
+            restRequest.AddQueryParameter("RequestKey", "123456");
+            restRequest.AddQueryParameter("AccountId", "acc_id");
+
+            // act
+            var restResponse = client.ExecuteAsync<User>(restRequest).GetAwaiter().GetResult();
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("reqres.in", client.BaseUrl.Host);
+            Assert.Equal(1, restResponse.Data.Data.id);
+            Assert.Equal("George", restResponse.Data.Data.first_name);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
         public void Should_Execute_RestRequest_With_POST_And_GenericType_And_Success()
         {
             // arrange
@@ -303,6 +329,29 @@ namespace RestSharp.Serilog.Auto.Tests
 
             // act
             var restResponse = client.Execute(restRequest);
+
+            // assert
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
+            Assert.Null(client.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_With_X_Www_Form_Url_Encoded_Async()
+        {
+            // arrange
+            var client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddHeader("LogIgnored", "ResponseBody,ResponseContent");
+            restRequest.AddParameter("", "someproperty=somevalue&someproperty=somevalue2&xpto&xpto=&", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.ExecuteAsync(restRequest).GetAwaiter().GetResult();
 
             // assert
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForError);
