@@ -318,7 +318,11 @@ namespace RestSharp
         private object GetRequestHeaders(IRestRequest request)
         {
             var result = new Dictionary<string, string>();
-            var parameters = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader);
+            var requestParameters = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader);
+            var clientParameters = this.DefaultParameters.Where(p => p.Type == ParameterType.HttpHeader);
+
+            var parameters = requestParameters.Union(clientParameters);
+
             var grouped = parameters.GroupBy(r => r.Name);
 
             foreach (var group in grouped)
