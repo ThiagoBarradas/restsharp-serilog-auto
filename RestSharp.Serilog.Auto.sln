@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto", "RestSharp.Serilog.Auto\RestSharp.Serilog.Auto.csproj", "{31BE75BA-AFA9-4A08-9AF2-443A97094062}"
 EndProject
@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestSharp.Serilog.Auto.Tests", "RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj", "{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto.Tests", "RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj", "{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
