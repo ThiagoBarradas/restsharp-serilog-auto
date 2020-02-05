@@ -13,7 +13,7 @@ using System.Web;
 
 namespace RestSharp
 {
-    public class RestClientAutolog : RestClient
+    public class RestClientAutolog : RestClient, IRestClient
     {
         public Dictionary<string, string> AdditionalProperties { get; set; } = new Dictionary<string, string>();
 
@@ -108,6 +108,12 @@ namespace RestSharp
             return response;
         }
 
+        public new Task<IRestResponse> ExecuteAsync(IRestRequest request, Method method, CancellationToken token = default)
+        {
+            request.Method = method;
+            return this.ExecuteAsync(request, token);
+        }
+
         public new Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -123,7 +129,6 @@ namespace RestSharp
         public new Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
-
             var response = base.ExecuteAsync<T>(request, token).GetAwaiter().GetResult();
             stopwatch.Stop();
 
