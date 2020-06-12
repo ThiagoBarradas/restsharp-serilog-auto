@@ -72,6 +72,13 @@ Default variables:
 * `ContentType`
 * `ResponseHeaders`
 
+## Setup global max length for exception properties
+
+Use env var to change default value
+
+- `SERILOG_ERROR_MESSAGE_MAX_LENGTH` default value 256;
+- `SERILOG_ERROR_EXCEPTION_MAX_LENGTH` default value 1024;
+
 ## How can I contribute?
 Please, refer to [CONTRIBUTING](.github/CONTRIBUTING.md)
 

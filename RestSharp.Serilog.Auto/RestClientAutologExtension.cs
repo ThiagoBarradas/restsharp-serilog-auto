@@ -2,6 +2,10 @@
 {
     public static class RestClientAutologExtension
     {
+        static RestClientAutologExtension()
+        {
+        }
+
         public static IRestClient AddLogAdditionalInfo(this IRestClient restClient, string key, string value)
         {
             if (!(restClient is RestClientAutolog))
