@@ -1,6 +1,7 @@
 ﻿using JsonMasking;
 using Newtonsoft.Json;
 using PackUtils;
+using RestSharp.Serilog.Auto.Extensions;
 using Serilog;
 using Serilog.Context;
 using System;
@@ -18,10 +19,6 @@ namespace RestSharp
         public Dictionary<string, string> AdditionalProperties { get; set; } = new Dictionary<string, string>();
 
         public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
-
-        public static int ErrorExceptionLenght = 1024;
-
-        public static int ErrorMessageLenght = 256;
 
         public RestClientAutologConfiguration Configuration { get; set; }
 
@@ -170,12 +167,12 @@ namespace RestSharp
 
             if (response.ErrorMessage != null)
             {
-                exceptionMessage = HandleFieldSize(response.ErrorMessage, ErrorMessageLenght);
+                exceptionMessage = HandleFieldSize(response.ErrorMessage, ExceptionMaxLenghtExtension.ErrorMessageLenght);
             }
             
             if (response.ErrorException != null)
             {
-                exceptionStackTrace = HandleFieldSize(response.ErrorException.StackTrace, ErrorExceptionLenght);
+                exceptionStackTrace = HandleFieldSize(response.ErrorException.StackTrace, ExceptionMaxLenghtExtension.ErrorExceptionLenght);
             }
 
             properties.Add("Agent", "RestSharp");
