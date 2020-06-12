@@ -4,9 +4,9 @@ namespace RestSharp.Serilog.Auto.Extensions
 {
     public static class ExceptionMaxLenghtExtension
     {
-        public static int ErrorMessageLenght = 256;
+        public readonly static int ErrorMessageLenght = 256;
 
-        public static int ErrorExceptionLenght = 1024;
+        public readonly static int ErrorExceptionLenght = 1024;
 
         static ExceptionMaxLenghtExtension()
         {
