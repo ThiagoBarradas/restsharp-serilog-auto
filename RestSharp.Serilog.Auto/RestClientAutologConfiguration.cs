@@ -42,6 +42,8 @@ namespace RestSharp
 
         public string[] JsonBlacklist { get; set; }
 
+        public bool EnabledLog { get; set; } = true;
+
         public LoggerConfiguration LoggerConfiguration { get; set; }
 
         public RestClientAutologConfiguration Clone()

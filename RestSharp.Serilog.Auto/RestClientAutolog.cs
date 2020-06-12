@@ -139,6 +139,11 @@ namespace RestSharp
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
         {
+            if (!this.Configuration.EnabledLog)
+            {
+                return;
+            }
+
             if (this.Configuration.LoggerConfiguration != null)
             {
                 Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
@@ -156,6 +161,19 @@ namespace RestSharp
                 }
             }
 
+            string exceptionMessage = null;
+            string exceptionStackTrace = null;
+
+            if (response.ErrorMessage != null)
+            {
+                exceptionMessage = HandleFieldSize(response.ErrorMessage, 256);
+            }
+            
+            if (response.ErrorException != null)
+            {
+                exceptionStackTrace = HandleFieldSize(response.ErrorException.StackTrace, 768);
+            }
+
             properties.Add("Agent", "RestSharp");
             properties.Add("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
             properties.Add("Method", response.Request.Method.ToString());
@@ -171,10 +189,9 @@ namespace RestSharp
             properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
             properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
             properties.Add("ResponseStatus", response.ResponseStatus.ToString());
-            properties.Add("ProtocolVersion", response.ProtocolVersion);
             properties.Add("IsSuccessful", response.IsSuccessful);
-            properties.Add("ErrorMessage", response.ErrorMessage);
-            properties.Add("ErrorException", response.ErrorException);
+            properties.Add("ErrorMessage", exceptionMessage);
+            properties.Add("ErrorException", exceptionStackTrace);
             properties.Add("ResponseContent", this.GetResponseContent(response));
             properties.Add("ContentLength", response.ContentLength);
             properties.Add("ContentType", response.ContentType);
@@ -345,6 +362,26 @@ namespace RestSharp
             }
 
             return result.Any() ? result : null;
+        }
+
+        private static string HandleFieldSize(string value, int maxSize, bool required = false, string defaultValue = "????")
+        {
+            if (string.IsNullOrWhiteSpace(value) && !required)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                value = defaultValue;
+            }
+
+            if (value.Length > maxSize)
+            {
+                return value.Substring(0, maxSize);
+            }
+
+            return value;
         }
     }
 }

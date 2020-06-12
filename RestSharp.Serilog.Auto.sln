@@ -8,17 +8,27 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto.ConsoleTest", "RestSharp.Serilog.Auto.ConsoleTest\RestSharp.Serilog.Auto.ConsoleTest.csproj", "{5C5AC852-8A87-4F58-929F-1DEF0BBD5A6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80069C55-050F-4C91-8195-1060B7A65D95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto.Tests", "RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj", "{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{E5FFE116-3E1D-4DA9-807D-1F48DC71446E}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{397D48E1-EB01-45B2-8471-C7EFDDB69102}"
+	ProjectSection(SolutionItems) = preProject
 		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
 		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharp.Serilog.Auto.Tests", "RestSharp.Serilog.Auto.Tests\RestSharp.Serilog.Auto.Tests.csproj", "{7A8FD458-992F-43D6-81C2-75C8DF18E7F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{3FF7E4CC-4D47-494C-84B4-9A96F18D1B57}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +51,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5FFE116-3E1D-4DA9-807D-1F48DC71446E} = {80069C55-050F-4C91-8195-1060B7A65D95}
+		{397D48E1-EB01-45B2-8471-C7EFDDB69102} = {80069C55-050F-4C91-8195-1060B7A65D95}
+		{3FF7E4CC-4D47-494C-84B4-9A96F18D1B57} = {80069C55-050F-4C91-8195-1060B7A65D95}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {41D52F78-2E5D-440C-A3D5-DA398432691A}
