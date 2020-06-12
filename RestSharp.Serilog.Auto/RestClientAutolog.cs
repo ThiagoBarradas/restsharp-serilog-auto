@@ -19,6 +19,10 @@ namespace RestSharp
 
         public static RestClientAutologConfiguration GlobalConfiguration { get; set; }
 
+        public static int ErrorExceptionLenght = 1024;
+
+        public static int ErrorMessageLenght = 256;
+
         public RestClientAutologConfiguration Configuration { get; set; }
 
         public RestClientAutolog(RestClientAutologConfiguration configuration)
@@ -166,12 +170,12 @@ namespace RestSharp
 
             if (response.ErrorMessage != null)
             {
-                exceptionMessage = HandleFieldSize(response.ErrorMessage, 256);
+                exceptionMessage = HandleFieldSize(response.ErrorMessage, ErrorMessageLenght);
             }
             
             if (response.ErrorException != null)
             {
-                exceptionStackTrace = HandleFieldSize(response.ErrorException.StackTrace, 768);
+                exceptionStackTrace = HandleFieldSize(response.ErrorException.StackTrace, ErrorExceptionLenght);
             }
 
             properties.Add("Agent", "RestSharp");
