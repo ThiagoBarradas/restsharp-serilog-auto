@@ -16,5 +16,19 @@
 
             return restClientAutolog;
         }
+
+        public static IRestClient EnableLog(this IRestClient restClient, bool enabled = true)
+        {
+            if (!(restClient is RestClientAutolog))
+            {
+                return restClient;
+            }
+
+            RestClientAutolog restClientAutolog = (RestClientAutolog)restClient;
+
+            restClientAutolog.Configuration.EnabledLog = enabled;
+
+            return restClientAutolog;
+        }
     }
 }
