@@ -53,11 +53,11 @@ Default variables:
 * `Agent`
 * `ElapsedMilliseconds`
 * `Method`
-* `Uri`
+* `Url`
 * `Host`
 * `Path`
 * `Query`
-* `Body`
+* `RequestBody`
 * `RequestHeaders`
 * `StatusCode`
 * `StatusDescription`
