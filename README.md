@@ -29,6 +29,7 @@ var loggerConfiguration = new LoggerConfiguration()
                 .Enrich.WithMachineName()
                 .Enrich.WithProperty("Domain", "MyDomain")
                 .Enrich.WithProperty("Application", "MyProject")
+                .Enrich.FromLogContext()
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console();
 
