@@ -4,6 +4,7 @@ using PackUtils;
 using RestSharp.Serilog.Auto.Extensions;
 using Serilog;
 using Serilog.Context;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -207,14 +208,20 @@ namespace RestSharp
                 }
             }
 
-            if (response.IsSuccessful)
+            LogEventLevel level = (response.IsSuccessful) ? LogEventLevel.Information : LogEventLevel.Error;
+
+            if (this.Configuration.OverrideLogLevelByStatusCode?.Any(r => r.Key == response.StatusCode) == true)
             {
-                Log.Information(this.Configuration.MessageTemplateForSuccess);
+                level = this.Configuration.OverrideLogLevelByStatusCode.First(r => r.Key == response.StatusCode).Value;
             }
-            else
-            {
-                Log.Error(this.Configuration.MessageTemplateForSuccess);
-            }
+
+            var message = (level == LogEventLevel.Warning ||
+                           level == LogEventLevel.Error ||
+                           level == LogEventLevel.Fatal)
+                           ? this.Configuration.MessageTemplateForError
+                           : this.Configuration.MessageTemplateForSuccess;
+
+            Log.Logger.Write(level, message);
         }
 
         private string[] GetIgnoredProperties(IRestRequest request)
