@@ -1,4 +1,7 @@
 ﻿using Serilog;
+using Serilog.Events;
+using System.Collections.Generic;
+using System.Net;
 
 namespace RestSharp
 {
@@ -43,6 +46,8 @@ namespace RestSharp
         public string[] JsonBlacklist { get; set; }
 
         public bool EnabledLog { get; set; } = true;
+
+        public Dictionary<HttpStatusCode, LogEventLevel> OverrideLogLevelByStatusCode { get; set; }
 
         public LoggerConfiguration LoggerConfiguration { get; set; }
 
