@@ -1,6 +1,9 @@
 using Serilog;
+using Serilog.Events;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Xunit;
 
 namespace RestSharp.Serilog.Auto.Tests
@@ -362,6 +365,32 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal("OK", restResponse.Content);
             Assert.Equal(200, (int)restResponse.StatusCode);
             Assert.True(restResponse.IsSuccessful); 
+        }
+
+        [Fact]
+        public void Should_Execute_RestRequest_Override_LogLevel()
+        {
+            // arrange
+            RestClientAutolog client = new RestClientAutolog("http://pruu.herokuapp.com/dump/restsharpAutoLog-test");
+            client.Configuration.OverrideLogLevelByStatusCode = new Dictionary<HttpStatusCode, LogEventLevel>();
+            client.Configuration.OverrideLogLevelByStatusCode.Add(HttpStatusCode.OK, LogEventLevel.Debug);
+            var restRequest = new RestRequest(Method.POST);
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddHeader("LogIgnored", "ResponseBody,ResponseContent");
+            restRequest.AddParameter("", "someproperty=somevalue&someproperty=somevalue2&xpto&xpto=&", ParameterType.RequestBody);
+
+            // act
+            var restResponse = client.ExecuteAsync(restRequest, Method.POST).GetAwaiter().GetResult();
+
+            // assert
+            var clientObj = (RestClientAutolog)client;
+            Assert.Equal(DefaultMessage, clientObj.Configuration.MessageTemplateForError);
+            Assert.Equal(DefaultMessage, clientObj.Configuration.MessageTemplateForSuccess);
+            Assert.Null(clientObj.Configuration.LoggerConfiguration);
+            Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
+            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(200, (int)restResponse.StatusCode);
+            Assert.True(restResponse.IsSuccessful);
         }
 
         [Fact]
