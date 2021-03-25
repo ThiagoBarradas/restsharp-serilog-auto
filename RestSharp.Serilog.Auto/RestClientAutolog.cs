@@ -146,7 +146,7 @@ namespace RestSharp
                 return;
             }
 
-            if (this.Configuration.LoggerConfiguration != null)
+            if (this.Configuration.LoggerConfiguration == null)
             {
                 Log.Logger = this.Configuration.LoggerConfiguration.CreateLogger();
             }
