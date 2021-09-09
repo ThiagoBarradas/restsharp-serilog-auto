@@ -1,5 +1,7 @@
 ﻿using Serilog;
 using Serilog.Events;
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -43,7 +45,21 @@ namespace RestSharp
             }
         }
 
-        public string[] JsonBlacklist { get; set; }
+        /// <summary>
+        /// This property will redirect to the property 'RequestJsonBlacklist'. So, when you get/set it's value,
+        /// what you are actually doing is using the other one.
+        /// You should actually use the 'RequestJsonBlacklist' to dismiss the obsolete warning.
+        /// </summary>
+        [Obsolete("Keeping this property to retrocompatibility and to not break the code when updating the library.")]
+        public string[] JsonBlacklist 
+        {
+            get => RequestJsonBlacklist;
+            set => RequestJsonBlacklist = value;
+        }
+
+        public string[] RequestJsonBlacklist { get; set; }
+
+        public string[] ResponseJsonBlacklist { get; set; }
 
         public bool EnabledLog { get; set; } = true;
 

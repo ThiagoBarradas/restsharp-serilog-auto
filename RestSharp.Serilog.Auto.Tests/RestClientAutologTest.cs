@@ -297,7 +297,7 @@ namespace RestSharp.Serilog.Auto.Tests
         {
             // arrange
             var client = new RestClientAutolog("https://reqres.in/api/users");
-            client.Configuration.JsonBlacklist = new string[] { "*job" };
+            client.Configuration.RequestJsonBlacklist = new string[] { "*job" };
             var restRequest = new RestRequest(Method.POST);
             restRequest.AddHeader("X-Forwarded-For", "127.0.0.1");
             restRequest.AddJsonBody(new

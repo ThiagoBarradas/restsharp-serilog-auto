@@ -277,7 +277,7 @@ namespace RestSharp
                 if (isJson)
                 {
                     var content = (body.Value is string) ? body.Value.ToString() : JsonConvert.SerializeObject(body.Value);
-                    return this.GetContentAsObjectByContentTypeJson(content, true, this.Configuration.JsonBlacklist);
+                    return this.GetContentAsObjectByContentTypeJson(content, true, this.Configuration.RequestJsonBlacklist);
                 }
                 
                 if (isForm)
@@ -297,7 +297,7 @@ namespace RestSharp
                 
             if (content != null && isJson == true)
             {
-                return this.GetContentAsObjectByContentTypeJson(content, false, null);
+                return this.GetContentAsObjectByContentTypeJson(content, true, this.Configuration.ResponseJsonBlacklist);
             }
 
             return content;

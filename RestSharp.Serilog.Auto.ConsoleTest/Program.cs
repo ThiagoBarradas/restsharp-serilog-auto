@@ -29,7 +29,7 @@ namespace RestSharp.Serilog.Auto.ConsoleTest
             RestClientAutolog client = new RestClientAutolog("http://pruu.herokuapp.com");
             client.AddDefaultHeader("DefaultHeaderTest", "SomeValue");
 
-            client.Configuration.JsonBlacklist = new string[] { "*password" };
+            client.Configuration.RequestJsonBlacklist = new string[] { "*password" };
 
             RestRequest request = new RestRequest("dump/{name}", Method.POST);
             request.AddHeader("RequestCustomHeader", "SomeValue2");
