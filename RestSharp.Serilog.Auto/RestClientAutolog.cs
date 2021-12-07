@@ -182,10 +182,10 @@ namespace RestSharp
             properties.Add("Host", uri.Host);
             properties.Add("Path", uri.AbsolutePath);
             properties.Add("Port", uri.Port);
-            properties.Add("QueryString", uri.Query);
-            properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request));
+            properties.Add("QueryString", MaskUriQueryString(uri));
+            properties.Add("Query", this.GetRequestQueryStringAsObject(response.Request, true));
             properties.Add("RequestBody", this.GetRequestBody(response.Request));
-            properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request));
+            properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request, true));
             properties.Add("StatusCode", (int)response.StatusCode);
             properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
             properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
@@ -196,7 +196,7 @@ namespace RestSharp
             properties.Add("ResponseContent", this.GetResponseContent(response));
             properties.Add("ContentLength", response.ContentLength);
             properties.Add("ContentType", response.ContentType);
-            properties.Add("ResponseHeaders", this.GetResponseHeaders(response));
+            properties.Add("ResponseHeaders", this.GetResponseHeaders(response, true));
             properties.Add("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
             foreach (var property in properties)
@@ -237,7 +237,7 @@ namespace RestSharp
             return ignoredProperties.Value.ToString().Split(',');
         }
 
-        private object GetRequestQueryStringAsObject(IRestRequest request)
+        private object GetRequestQueryStringAsObject(IRestRequest request, bool mask)
         {
             var result = new Dictionary<string, string>();
             var parameters = request.Parameters.Where(p => p.Type == ParameterType.QueryString);
@@ -245,7 +245,15 @@ namespace RestSharp
 
             foreach(var group in grouped)
             {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+                var key = group.Key;
+                var value = string.Join(",", group.Select(r => r.Value));
+
+                if (mask)
+                {
+                    value = MaskQueryStringValue(key, value);
+                }
+
+                result.Add(group.Key, value);
             }
 
             return result.Any() ? result : null;
@@ -339,7 +347,7 @@ namespace RestSharp
             return content;
         }
 
-        private object GetRequestHeaders(IRestRequest request)
+        private object GetRequestHeaders(IRestRequest request, bool mask)
         {
             var result = new Dictionary<string, string>();
             var requestParameters = request.Parameters.Where(p => p.Type == ParameterType.HttpHeader);
@@ -351,13 +359,21 @@ namespace RestSharp
 
             foreach (var group in grouped)
             {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+                var key = group.Key;
+                var value = string.Join(",", group.Select(r => r.Value));
+
+                if (mask)
+                {
+                    value = MaskHeaderValue(key, value);
+                }
+
+                result.Add(group.Key, value);
             }
 
             return result;
         }
 
-        private object GetResponseHeaders(IRestResponse response)
+        private object GetResponseHeaders(IRestResponse response, bool mask)
         {
             var result = new Dictionary<string, string>();
             var parameters = response?.Headers ?? new List<Parameter>();
@@ -365,7 +381,15 @@ namespace RestSharp
 
             foreach (var group in grouped)
             {
-                result.Add(group.Key, string.Join(",", group.Select(r => r.Value)));
+                var key = group.Key;
+                var value = string.Join(",", group.Select(r => r.Value));
+
+                if (mask)
+                {
+                    value = MaskHeaderValue(key, value);
+                }
+
+                result.Add(group.Key, value);
             }
 
             return result.Any() ? result : null;
@@ -386,6 +410,42 @@ namespace RestSharp
             if (value.Length > maxSize)
             {
                 return value.Substring(0, maxSize);
+            }
+
+            return value;
+        }
+
+        private string MaskUriQueryString(Uri uri)
+        {
+            if (string.IsNullOrEmpty(uri.Query))
+            {
+                return string.Empty;
+            }
+
+            var queryString = HttpUtility.ParseQueryString(uri.Query);
+            foreach (var qs in queryString.AllKeys)
+            {
+                queryString[qs] = MaskQueryStringValue(qs, queryString[qs]);
+            }
+            
+            return queryString.ToString();
+        }
+
+        private string MaskQueryStringValue(string key, string value)
+        {
+            if (this.Configuration.QueryStringBlacklist?.Any() == true && this.Configuration.QueryStringBlacklist.Contains(key))
+            {
+                return "******";
+            }
+
+            return value;
+        }
+
+        private string MaskHeaderValue(string key, string value)
+        {
+            if (this.Configuration.HeaderBlacklist?.Any() == true && this.Configuration.HeaderBlacklist.Contains(key))
+            {
+                return "******";
             }
 
             return value;
