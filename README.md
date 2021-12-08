@@ -1,4 +1,4 @@
-[![Build Status](https://barradas.visualstudio.com/Contributions/_apis/build/status/NugetPackage/RestSharp%20Serilog%20Auto?branchName=master)](https://barradas.visualstudio.com/Contributions/_build/latest?definitionId=14&branchName=master)
+[![Build Status](https://barradas.visualstudio.com/Contributions/_apis/build/status/NugetPackage/RestSharp%20Serilog%20Auto?branchName=develop)](https://barradas.visualstudio.com/Contributions/_build/latest?definitionId=14&branchName=master)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/RestSharp.Serilog.Auto.svg)](https://www.nuget.org/packages/RestSharp.Serilog.Auto/)
 [![NuGet Version](https://img.shields.io/nuget/v/RestSharp.Serilog.Auto.svg)](https://www.nuget.org/packages/RestSharp.Serilog.Auto/)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_restsharp-serilog-auto&metric=alert_status)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_restsharp-serilog-auto)
