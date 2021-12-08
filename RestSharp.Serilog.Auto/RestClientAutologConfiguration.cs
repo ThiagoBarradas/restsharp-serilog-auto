@@ -60,6 +60,10 @@ namespace RestSharp
         public string[] RequestJsonBlacklist { get; set; }
 
         public string[] ResponseJsonBlacklist { get; set; }
+        
+        public string[] HeaderBlacklist { get; set; }
+
+        public string[] QueryStringBlacklist { get; set; }
 
         public bool EnabledLog { get; set; } = true;
 
