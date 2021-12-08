@@ -178,7 +178,7 @@ namespace RestSharp
             properties.Add("Agent", "RestSharp");
             properties.Add("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds);
             properties.Add("Method", response.Request.Method.ToString());
-            properties.Add("Url", uri.AbsoluteUri);
+            properties.Add("Url", BuildUrl(uri));
             properties.Add("Host", uri.Host);
             properties.Add("Path", uri.AbsolutePath);
             properties.Add("Port", uri.Port);
@@ -449,6 +449,18 @@ namespace RestSharp
             }
 
             return value;
+        }
+
+        private string BuildUrl(Uri uri)
+        {
+            var url = uri.AbsoluteUri;
+
+            if(uri.Query != null)
+            {
+                url = $"{url.Split('?')?.FirstOrDefault()}?{MaskUriQueryString(uri)}";
+            }
+
+            return url;
         }
     }
 }
