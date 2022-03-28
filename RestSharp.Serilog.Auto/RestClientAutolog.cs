@@ -188,7 +188,7 @@ namespace RestSharp
             properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request, true));
             properties.Add("StatusCode", (int)response.StatusCode);
             properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
-            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
+            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ", ""));
             properties.Add("ResponseStatus", response.ResponseStatus.ToString());
             properties.Add("IsSuccessful", response.IsSuccessful);
             properties.Add("ErrorMessage", exceptionMessage);
@@ -198,6 +198,7 @@ namespace RestSharp
             properties.Add("ContentType", response.ContentType);
             properties.Add("ResponseHeaders", this.GetResponseHeaders(response, true));
             properties.Add("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            properties.Add("ProtocolVersion", response.ProtocolVersion?.ToString());
 
             foreach (var property in properties)
             {

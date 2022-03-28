@@ -35,8 +35,8 @@ var loggerConfiguration = new LoggerConfiguration()
 
 var restClientAutologConfiguration = new RestClientAutologConfiguration()
 {
-    MessageTemplateForSuccess = "{Method} {Uri} responded {StatusCode}", 
-    MessageTemplateForError = "{Method} {Uri} is not good! {ErrorMessage}", 
+    MessageTemplateForSuccess = "{Method} {Url} responded {StatusCode}", 
+    MessageTemplateForError = "{Method} {Url} is not good! {ErrorMessage}", 
     LoggerConfiguration = loggerConfiguration
 };
 
@@ -57,21 +57,24 @@ Default variables:
 * `Url`
 * `Host`
 * `Path`
+* `Port`
+* `QueryString`
 * `Query`
 * `RequestBody`
 * `RequestHeaders`
 * `StatusCode`
+* `StatusCodeFamily`
 * `StatusDescription`
 * `ResponseStatus`
-* `ProtocolVersion`
 * `IsSuccessful`
 * `ErrorMessage`
 * `ErrorException`
-* `Content`
-* `ContentEncoding`
+* `ResponseContent`
 * `ContentLength`
 * `ContentType`
+* `ContentEncoding`
 * `ResponseHeaders`
+* `ProtocolVersion`
 
 ## Setup global max length for exception properties
 
