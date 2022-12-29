@@ -115,27 +115,27 @@ namespace RestSharp
             return this.ExecuteAsync(request, token);
         }
 
-        public new Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
+        public new async Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            var response = base.ExecuteAsync(request, token).GetAwaiter().GetResult();
+            var response = await base.ExecuteAsync(request, token);
             stopwatch.Stop();
 
             this.LogRequestAndResponse(response, stopwatch);
 
-            return Task.FromResult(response) ;
+            return response;
         }
 
-        public new Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
+        public new async Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
-            var response = base.ExecuteAsync<T>(request, token).GetAwaiter().GetResult();
+            var response = await base.ExecuteAsync<T>(request, token);
             stopwatch.Stop();
 
             this.LogRequestAndResponse(response, stopwatch);
 
-            return Task.FromResult(response);
+            return response;
         }
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
