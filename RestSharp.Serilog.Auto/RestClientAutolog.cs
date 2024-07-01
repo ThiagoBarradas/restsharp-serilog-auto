@@ -115,27 +115,27 @@ namespace RestSharp
             return this.ExecuteAsync(request, token);
         }
 
-        public new Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
+        public new async Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            var response = base.ExecuteAsync(request, token).GetAwaiter().GetResult();
+            var response = await base.ExecuteAsync(request, token);
             stopwatch.Stop();
 
             this.LogRequestAndResponse(response, stopwatch);
 
-            return Task.FromResult(response) ;
+            return response;
         }
 
-        public new Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
+        public new async Task<IRestResponse<T>> ExecuteAsync<T>(IRestRequest request, CancellationToken token = default)
         {
             var stopwatch = Stopwatch.StartNew();
-            var response = base.ExecuteAsync<T>(request, token).GetAwaiter().GetResult();
+            var response = await base.ExecuteAsync<T>(request, token);
             stopwatch.Stop();
 
             this.LogRequestAndResponse(response, stopwatch);
 
-            return Task.FromResult(response);
+            return response;
         }
 
         private void LogRequestAndResponse(IRestResponse response, Stopwatch stopwatch)
@@ -188,7 +188,7 @@ namespace RestSharp
             properties.Add("RequestHeaders", this.GetRequestHeaders(response.Request, true));
             properties.Add("StatusCode", (int)response.StatusCode);
             properties.Add("StatusCodeFamily", ((int)response.StatusCode).ToString()[0] + "XX");
-            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ",""));
+            properties.Add("StatusDescription", response.StatusDescription?.Replace(" ", ""));
             properties.Add("ResponseStatus", response.ResponseStatus.ToString());
             properties.Add("IsSuccessful", response.IsSuccessful);
             properties.Add("ErrorMessage", exceptionMessage);
@@ -198,6 +198,7 @@ namespace RestSharp
             properties.Add("ContentType", response.ContentType);
             properties.Add("ResponseHeaders", this.GetResponseHeaders(response, true));
             properties.Add("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            properties.Add("ProtocolVersion", response.ProtocolVersion?.ToString());
 
             foreach (var property in properties)
             {
