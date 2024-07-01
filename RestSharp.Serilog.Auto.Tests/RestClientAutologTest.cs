@@ -338,9 +338,9 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
-            Assert.Equal("OK", restResponse.Content);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -362,9 +362,9 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal(DefaultMessage, clientObj.Configuration.MessageTemplateForSuccess);
             Assert.Null(clientObj.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
-            Assert.Equal("OK", restResponse.Content);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.True(restResponse.IsSuccessful); 
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.True(!restResponse.IsSuccessful); 
         }
 
         [Fact]
@@ -388,9 +388,9 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal(DefaultMessage, clientObj.Configuration.MessageTemplateForSuccess);
             Assert.Null(clientObj.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
-            Assert.Equal("OK", restResponse.Content);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -410,9 +410,9 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
-            Assert.Equal("OK", restResponse.Content);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -432,9 +432,9 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Equal(DefaultMessage, client.Configuration.MessageTemplateForSuccess);
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
-            Assert.Equal("OK", restResponse.Content);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -454,10 +454,10 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
             Assert.Equal(Method.POST, restResponse.Request.Method);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
             Assert.Single(restResponse.Request.Parameters);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -477,10 +477,10 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
             Assert.Equal(Method.POST, restResponse.Request.Method);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
             Assert.Single(restResponse.Request.Parameters);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.True(!restResponse.IsSuccessful);
         }
         
         [Fact]
@@ -500,11 +500,11 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
             Assert.Equal(Method.POST, restResponse.Request.Method);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
             Assert.Single(restResponse.Request.Parameters);
             Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -525,13 +525,13 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
             Assert.Equal(Method.POST, restResponse.Request.Method);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
             Assert.Single(restResponse.Request.Parameters);
             Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
             Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Value);
             Assert.Equal(DataFormat.Json, restResponse.Request.Parameters.FirstOrDefault().DataFormat);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.True(!restResponse.IsSuccessful);
         }
 
         [Fact]
@@ -553,13 +553,13 @@ namespace RestSharp.Serilog.Auto.Tests
             Assert.Null(client.Configuration.LoggerConfiguration);
             Assert.Equal("pruu.herokuapp.com", client.BaseUrl.Host);
             Assert.Equal(Method.POST, restResponse.Request.Method);
-            Assert.Equal(200, (int)restResponse.StatusCode);
-            Assert.Equal("OK", restResponse.Content);
+            Assert.Equal(404, (int)restResponse.StatusCode);
+            Assert.StartsWith("<!DOCTYPE html", restResponse.Content);
             Assert.Single(restResponse.Request.Parameters);
             Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Name);
             Assert.Equal("", restResponse.Request.Parameters.FirstOrDefault().Value);
             Assert.Equal("application/json", restResponse.Request.Parameters.FirstOrDefault().ContentType);
-            Assert.True(restResponse.IsSuccessful);
+            Assert.True(!restResponse.IsSuccessful);
         }
     }
 
